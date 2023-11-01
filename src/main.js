@@ -33,6 +33,7 @@ const render = Render.create({
     wireframes: false,
     showCollisions: false,
     showDebug: false,
+    showPositions: true,
   },
 });
 
@@ -44,6 +45,11 @@ const runner = Runner.create();
 
 // run the engine
 Runner.run(runner, engine);
+
+// define our categories (as bit fields, there are up to 32 available) to prevent moving the circle
+const defaultCategory = 0x0001,
+  redCategory = 0x0002,
+  greenCategory = 0x0004;
 
 // add mouse control
 const mouse = Mouse.create(render.canvas),
@@ -58,6 +64,8 @@ const mouse = Mouse.create(render.canvas),
   });
 
 Composite.add(world, mouseConstraint);
+// blue and blue category objects should not be draggable with the mouse
+mouseConstraint.collisionFilter.mask = greenCategory;
 
 // keep the mouse in sync with rendering
 render.mouse = mouse;
@@ -68,85 +76,92 @@ Render.lookAt(render, {
   max: { x: CW, y: CH },
 });
 
-// define our categories (as bit fields, there are up to 32 available)
-const defaultCategory = 0x0001,
-  redCategory = 0x0002,
-  greenCategory = 0x0004,
-  blueCategory = 0x0008;
-
 // walls
 const thickness = 20;
 const wallOptions = {
   isStatic: true,
-  render: {
-    fillStyle: "#fc175e",
-  },
 };
 const topWall = Bodies.rectangle(CW / 2, 0, CW, thickness, wallOptions);
-const bottomWall = Bodies.rectangle(
-  CW / 2,
-  CH,
-  CW,
-  thickness * 4,
-  wallOptions
-);
+const bottomWall = Bodies.rectangle(CW / 2, CH, CW, thickness * 4, wallOptions);
 const leftWall = Bodies.rectangle(0, CH / 2, thickness, CH, wallOptions);
-const rightWall = Bodies.rectangle(
-  CW,
-  CH / 2,
-  thickness,
-  CH,
-  wallOptions
-);
+const rightWall = Bodies.rectangle(CW, CH / 2, thickness, CH, wallOptions);
 Composite.add(world, [topWall, rightWall, leftWall, bottomWall]);
+
+const categories = [];
 const colors = [
   "#f5a7ff",
   "#346dd6",
   "#d63434",
   "#34d642",
   "#ebe145",
-  /* "#f56a26",
-  "#8a6ae1",
-  "#34d6b6",
-  "#8a5340",
-  "#777777",
-  "#00ffff",
-  "#ff00ff",*/
+  "#ff00ff",
+  "#f5a7ff",
+  "#346dd6",
+  "#d63434",
+  "#34d642",
+  "#ebe145",
+  "#ff00ff",
+  "#f5a7ff",
+  "#346dd6",
+  "#d63434",
+  "#34d642",
+  "#ebe145",
+  "#ff00ff",
 ];
 
-const categories = [];
+// scale between category
+const scale = 1.5;
 
-let currentSize = 10;
+// initial radius of first circle
+const initialValue = 10;
 
-for (let i = 1; i < colors.length + 1; i++) {
+// radius ratio between category
+const commonRatio = scale; // 7.5 / 5 = 1.5
+
+// categories count
+const numTerms = colors.length;
+
+// create all possible radius sizes for the circle 
+const sizes = generateGeometricSequence(initialValue, commonRatio, numTerms);
+for (let i = 0; i < colors.length; i++) {
   categories.push({
-    size: currentSize,
-    category: `c${i}`,
-    color: colors[i - 1],
+    size: sizes[i],
+    category: i,
+    color: colors[i],
   });
-
-  currentSize += 5;
 }
 
-// circle container
-const circles = [];
+function createCircle() {
+  const category = getRandom([...categories.slice(0, 4)]);
+  const options = {
+    isStatic: true,
+    restitution: 0.03, // bounce level
+    category: category.category,
+    collisionFilter: {
+      mask: defaultCategory | redCategory,
+    },
+    render: {
+      fillStyle: category.color,
+    },
+  };
+  const circle = Bodies.circle(CW / 2, 50, category.size, options);
+  Composite.add(world, circle);
+}
 
-// create first circle and add to world and container
-const firstCircleCategory = Common.choose(categories);
-const firstCircle = Bodies.circle(CW / 2, 50, firstCircleCategory.size, {
-  isStatic: true,
-  category: firstCircleCategory.category,
-  collisionFilter: {
-    mask: defaultCategory | redCategory,
-  },
-  render: {
-    fillStyle: firstCircleCategory.color,
-  },
-});
-circles.push(firstCircle);
-const stack = Composite.add(world, circles);
+// create first circle and add to world
+createCircle();
 
+// function to get all circle body in world
+function getBodies() {
+  return Composite.allBodies(world).filter(
+    (body) => body.label === "Circle Body"
+  );
+}
+
+// listen to mouse movement and update static circle position
 Events.on(mouseConstraint, "mousemove", (event) => {
+  // get all circle body
+  const circles = getBodies();
   // update latest circle position here
   Body.setPosition(circles[circles.length - 1], {
     x: event.mouse.position.x,
@@ -154,61 +169,91 @@ Events.on(mouseConstraint, "mousemove", (event) => {
   });
 });
 
-Events.on(mouseConstraint, "mouseup", () => {
+// listen to mouse left click and set circle static to false
+Events.on(mouseConstraint, "mouseup", (event) => {
+  // get all circle body
+  const circles = getBodies();
   // set latest circle isStatic to false here
   Body.setStatic(circles[circles.length - 1], false);
-
-  // create new circle and add to world and container
-  const newCategory = Common.choose(categories);
-  const newCircle = Bodies.circle(CW / 2, 50, newCategory.size, {
-    isStatic: true,
-    category: newCategory.category,
-    collisionFilter: {
-      mask: defaultCategory | blueCategory,
-    },
-    render: {
-      fillStyle: newCategory.color,
-    },
-  });
-  circles.push(newCircle);
-  Composite.add(world, newCircle);
+  // create next circle
+  createCircle();
 });
 
 Events.on(engine, "collisionActive", (event) => {
-  // list of active collision between two body []
+  // lists of active collision between two circle => []
   const lists = event.source.pairs.list;
 
   // check collision between circles
-  const length = lists.length;
-  for (let i = 0; i < length; i++) {
-    // Access and work with array[i]
-    const bodyA = lists[i].bodyA;
-    const bodyB = lists[i].bodyB;
+  for (let i = 0; i < lists.length; i++) {
+    // get collided circle
+    const circleA = lists[i].bodyA;
+    const circleB = lists[i].bodyB;
 
+    // filter collided circle
     if (
-      bodyA.category === bodyB.category &&
-      bodyA.circleRadius === bodyB.circleRadius &&
-      bodyA.label === "Circle Body" &&
-      bodyB.label === "Circle Body" &&
-      !bodyA.isStatic &&
-      !bodyB.isStatic
+      circleA.category === circleB.category &&
+      circleA.circleRadius === circleB.circleRadius &&
+      circleA.label === "Circle Body" &&
+      circleB.label === "Circle Body" &&
+      !circleA.isStatic &&
+      !circleB.isStatic
     ) {
-      // get the body index in circles array
-      const indexA = circles.indexOf(bodyA);
+      // remove circleA in world
+      Composite.remove(world, circleA);
 
-      // remove bodyA in circles array
-      circles.splice(indexA, 1);
-      // remove bodyA in world bodies
-      Composite.remove(stack, bodyA);
-
-      // update bodyB
-      // check previous bodyB category
-      // update depends on previous bodyB category
-      bodyB.render.fillStyle = "#ffffff";
-      Body.scale(bodyB, 2, 2);
+      // update circleB
+      // check previous circleB category
+      const prevCategory = circleB.category;
+      // update circleB category
+      const newCategory = categories[prevCategory + 1];
+      // update depends on previous circleB category
+      Body.set(circleB, "category", newCategory.category);
+      // Body.set(circleB, "circleRadius", newCategory.size);
+      Body.set(circleB.render, "fillStyle", newCategory.color);
+      // update circleB radius
+      Body.scale(circleB, scale, scale);
     }
   }
 });
 
-// blue and blue category objects should not be draggable with the mouse
-mouseConstraint.collisionFilter.mask = greenCategory;
+let lastTime = Common.now();
+// an example of using beforeUpdate event on an engine
+Events.on(engine, "beforeUpdate", function (event) {
+  // get all bodies in world
+  const circles = getBodies();
+
+  // game over condition
+  for (let i = 0; i < circles.length; i++) {
+    // chek circle highest y coordinate
+    const y = circles[i].position.y;
+    if (y <= 30) {
+      console.log("Game Over");
+      // stop world for re render
+      Render.stop(render);
+    }
+  }
+
+  // apply random forces every 5 secs
+  if (Common.now() - lastTime >= 5000) {
+    // update last time
+    lastTime = Common.now();
+  }
+});
+
+// get random value from areay
+function getRandom(array) {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
+
+function generateGeometricSequence(initialValue, commonRatio, numTerms) {
+  const sequence = [];
+  let currentValue = initialValue;
+
+  for (let i = 0; i < numTerms; i++) {
+    sequence.push(currentValue);
+    currentValue *= commonRatio;
+  }
+
+  return sequence;
+}
