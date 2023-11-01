@@ -8,15 +8,16 @@ const {
   Common,
   Events,
   Composite,
-  Composites,
-  Detector,
   Mouse,
   MouseConstraint,
 } = Matter;
 
+const canvasWidth = window.innerWidth <= 768 ? window.innerWidth : 768;
+const canvasHeight = window.innerHeight;
+
 const canvas = document.getElementById("myCanvas"),
-  CW = (canvas.width = window.innerWidth - 30),
-  CH = (canvas.height = window.innerHeight - 30);
+  CW = (canvas.width = canvasWidth),
+  CH = (canvas.height = canvasHeight);
 
 // create an engine
 const engine = Engine.create();
@@ -74,7 +75,7 @@ const defaultCategory = 0x0001,
   blueCategory = 0x0008;
 
 // walls
-const thickness = 10;
+const thickness = 20;
 const wallOptions = {
   isStatic: true,
   render: {
@@ -84,14 +85,14 @@ const wallOptions = {
 const topWall = Bodies.rectangle(CW / 2, 0, CW, thickness, wallOptions);
 const bottomWall = Bodies.rectangle(
   CW / 2,
-  CH - thickness,
+  CH,
   CW,
-  thickness,
+  thickness * 4,
   wallOptions
 );
 const leftWall = Bodies.rectangle(0, CH / 2, thickness, CH, wallOptions);
 const rightWall = Bodies.rectangle(
-  CW - thickness,
+  CW,
   CH / 2,
   thickness,
   CH,
@@ -153,7 +154,7 @@ Events.on(mouseConstraint, "mousemove", (event) => {
   });
 });
 
-Events.on(mouseConstraint, "mouseup", (event) => {
+Events.on(mouseConstraint, "mouseup", () => {
   // set latest circle isStatic to false here
   Body.setStatic(circles[circles.length - 1], false);
 
@@ -194,7 +195,6 @@ Events.on(engine, "collisionActive", (event) => {
     ) {
       // get the body index in circles array
       const indexA = circles.indexOf(bodyA);
-      const indexB = circles.indexOf(bodyB);
 
       // remove bodyA in circles array
       circles.splice(indexA, 1);
