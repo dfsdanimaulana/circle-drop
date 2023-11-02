@@ -52,6 +52,7 @@ const colors = [
   "#000000",
   "#ffffff",
   "#7f003b",
+  "#94f769",
 ];
 
 const sfx = {
@@ -130,6 +131,7 @@ const numTerms = colors.length;
 
 // create all possible radius sizes for the circle
 const sizes = generateGeometricSequence(initialValue, commonRatio, numTerms);
+
 // Array to store all possible circle category
 const categories = [];
 // generate all possible category for the circle
@@ -178,8 +180,9 @@ Events.on(engine, "collisionActive", (event) => {
 
     // filter collided circle
     if (checkCircleCollision(circleA, circleB)) {
-      // TODO: play collision audio
+      // play collision audio
       sfx.merge.play();
+
       // remove circleA in world
       Composite.remove(world, circleA);
 
@@ -215,7 +218,7 @@ Events.on(engine, "beforeUpdate", function (event) {
     // chek circle highest y coordinate
     const y = circles[i].position.y - circles[i].circleRadius;
     if (y <= 10 && !circles[i].isStatic) {
-      // TODO: play game over audio
+      // play game over audio
       sfx.gameOver.play();
       world.gameOver = true;
       // stop world for re render
