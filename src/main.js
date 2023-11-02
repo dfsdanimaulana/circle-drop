@@ -22,7 +22,7 @@ const canvas = document.getElementById("myCanvas"),
   CW = (canvas.width = canvasWidth),
   CH = (canvas.height = canvasHeight);
 
-// Background fill color
+// background fill color
 const backgroundColor = "#2e2e2e";
 // top circle initial position
 const positionY = 60;
@@ -30,8 +30,10 @@ const positionY = 60;
 const scale = 1.3;
 // initial radius of first circle
 const initialValue = 20;
-// Walls fill color
+// walls fill color
 const wallsColor = "#1c1c1c";
+// sign fill color
+const signColor = "#986129";
 // walls wallThickness
 const wallThickness = 20;
 // floor thickness
@@ -251,28 +253,34 @@ let signId;
 // create hanging sign
 const sign = Bodies.rectangle(50, 50, 100, 30, {
   label: "Sign",
+  render: {
+    fillStyle: signColor,
+  },
 });
 signId = sign.id;
 const constraintRender = {
-  strokeStyle: "#ffffff",
-  lineWidth: 2,
-}
+  strokeStyle: "#d9d9d9",
+  lineWidth: 1.5,
+};
+const constraintLength = 10;
 const constraintLeft = Constraint.create({
   bodyA: topWall,
-  pointA: {x:30 - CW/2, y: wallThickness/2},
+  pointA: { x: 30 - CW / 2, y: wallThickness / 2 },
   bodyB: sign,
-  pointB: {x:-40, y:-15},
-  render: constraintRender
-})
+  pointB: { x: -40, y: -15 },
+  render: constraintRender,
+  length: constraintLength,
+});
 const constraintRight = Constraint.create({
   bodyA: topWall,
-  pointA: {x:110 - CW/2, y:wallThickness/2},
+  pointA: { x: 110 - CW / 2, y: wallThickness / 2 },
   bodyB: sign,
-  pointB: {x:40, y:-15},
-  render: constraintRender
-})
+  pointB: { x: 40, y: -15 },
+  render: constraintRender,
+  length: constraintLength,
+});
 
-Composite.add(world, [constraintLeft, constraintRight,sign]);
+Composite.add(world, [constraintLeft, constraintRight, sign]);
 
 /** UTILS **/
 /**
@@ -282,27 +290,32 @@ function drawGameStatus() {
   // get sign body
   const signBody = Composite.allBodies(world).filter(
     (body) => body.label === "Sign"
-  )
-  const signX = signBody[0].position.x
-  const signY = signBody[0].position.y
+  )[0];
+  const signX = signBody.position.x;
+  const signY = signBody.position.y;
   ctx.save();
   // draw game score
+
+  ctx.translate(signX, signY);
+  ctx.rotate(signBody.angle);
   ctx.font = "bold 15px Arial";
   ctx.fillStyle = "#070707";
-  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, signX - 40, signY + 5);
+  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, -40, 5);
   ctx.fillStyle = "#e9e9e9";
-  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, signX - 40, signY + 5);
+  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, -40, 5);
+  ctx.restore();
 
   if (world.gameOver) {
     // draw game over message
+    ctx.save();
     const fromX = CW / 2 - 145;
     ctx.font = "bold 50px Arial";
     ctx.fillStyle = "#191919";
     ctx.fillText(`GAME OVER`, fromX + 3, CH / 2 + 3);
     ctx.fillStyle = "#f4f4f4";
     ctx.fillText(`GAME OVER`, fromX, CH / 2);
+    ctx.restore();
   }
-  ctx.restore();
 }
 
 /**
