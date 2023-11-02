@@ -5,7 +5,7 @@ const {
   Runner,
   Bodies,
   Body,
-  Common,
+  Constraint,
   Events,
   Composite,
   Mouse,
@@ -145,6 +145,7 @@ for (let i = 0; i < colors.length; i++) {
 
 // create first circle and add to world
 createCircle();
+console.log(Composite.allBodies(world));
 
 // listen to mouse movement and update static circle position
 Events.on(mouseConstraint, "mousemove", (event) => {
@@ -246,18 +247,51 @@ const leftWall = Bodies.rectangle(0, CH / 2, wallThickness, CH, wallOptions);
 const rightWall = Bodies.rectangle(CW, CH / 2, wallThickness, CH, wallOptions);
 Composite.add(world, [topWall, rightWall, leftWall, bottomWall]);
 
+let signId;
+// create hanging sign
+const sign = Bodies.rectangle(50, 50, 100, 30, {
+  label: "Sign",
+});
+signId = sign.id;
+const constraintRender = {
+  strokeStyle: "#ffffff",
+  lineWidth: 2,
+}
+const constraintLeft = Constraint.create({
+  bodyA: topWall,
+  pointA: {x:30 - CW/2, y: wallThickness/2},
+  bodyB: sign,
+  pointB: {x:-40, y:-15},
+  render: constraintRender
+})
+const constraintRight = Constraint.create({
+  bodyA: topWall,
+  pointA: {x:110 - CW/2, y:wallThickness/2},
+  bodyB: sign,
+  pointB: {x:40, y:-15},
+  render: constraintRender
+})
+
+Composite.add(world, [constraintLeft, constraintRight,sign]);
+
 /** UTILS **/
 /**
  * Draw game status on canvas
  */
 function drawGameStatus() {
+  // get sign body
+  const signBody = Composite.allBodies(world).filter(
+    (body) => body.label === "Sign"
+  )
+  const signX = signBody[0].position.x
+  const signY = signBody[0].position.y
   ctx.save();
   // draw game score
   ctx.font = "bold 15px Arial";
   ctx.fillStyle = "#070707";
-  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, 22, 32);
+  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, signX - 40, signY + 5);
   ctx.fillStyle = "#e9e9e9";
-  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, 20, 30);
+  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, signX - 40, signY + 5);
 
   if (world.gameOver) {
     // draw game over message
