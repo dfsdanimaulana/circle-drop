@@ -256,7 +256,7 @@ function drawGameStatus() {
   ctx.fillStyle = "#e9e9e9";
   ctx.fillText(`SCORE: ${world.gameScore.toString()}`, 20, 30);
 
-  if (!world.gameOver) {
+  if (world.gameOver) {
     // draw game over message
     const fromX = CW / 2 - 145;
     ctx.font = "bold 50px Arial";
