@@ -21,8 +21,6 @@ const canvas = document.getElementById("myCanvas"),
   CW = (canvas.width = canvasWidth),
   CH = (canvas.height = canvasHeight);
 
-// Walls fill color
-const wallsColor = "#1c1c1c";
 // Background fill color
 const backgroundColor = "#2e2e2e";
 // top circle initial position
@@ -31,8 +29,12 @@ const positionY = 60;
 const scale = isMobile ? 1.3 : 1.5;
 // initial radius of first circle
 const initialValue = isMobile ? 20 : 25;
+// Walls fill color
+const wallsColor = "#1c1c1c";
 // walls wallThickness
 const wallThickness = 20;
+// floor thickness
+const floorThickness = 100;
 // list possible colors
 const colors = [
   "#f5a7ff",
@@ -233,7 +235,7 @@ const bottomWall = Bodies.rectangle(
   CW / 2,
   CH,
   CW,
-  wallThickness * 6,
+  floorThickness,
   wallOptions
 );
 const leftWall = Bodies.rectangle(0, CH / 2, wallThickness, CH, wallOptions);
@@ -247,14 +249,19 @@ Composite.add(world, [topWall, rightWall, leftWall, bottomWall]);
 function drawGameStatus() {
   ctx.save();
   // draw game score
+  ctx.font = "bold 15px Arial";
+  ctx.fillStyle = "#070707";
+  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, 22, 32);
   ctx.fillStyle = "#e9e9e9";
-  ctx.font = "15px Arial";
   ctx.fillText(`SCORE: ${world.gameScore.toString()}`, 20, 30);
 
   if (world.gameOver) {
     // draw game over message
-    ctx.font = "50px Arial";
-    const fromX = isMobile ? CW / 2 - 130 : CW / 2 - 400;
+    const fromX = isMobile ? CW / 2 - 140 : CW / 2 - 400;
+    ctx.font = "bold 50px Arial";
+    ctx.fillStyle = "#191919";
+    ctx.fillText(`GAME OVER`, fromX + 3, CH / 2 + 3);
+    ctx.fillStyle = "#f4f4f4";
     ctx.fillText(`GAME OVER`, fromX, CH / 2);
   }
   ctx.restore();
