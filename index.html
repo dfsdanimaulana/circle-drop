@@ -10,6 +10,7 @@
   <style>
     body {
       background-color: rgb(231, 231, 231);
+      cursor: url("assets/image/cursor.png"), auto;
     }
     #myCanvas {
       position: absolute;
@@ -24,5 +25,25 @@
   <script src="src/howler.core.min.js"></script>
   <script src="src/matter.min.js"></script>
   <script src="src/main.js"></script>
+  <script>
+  // add custom cursor
+  let defaultCursorImage = "assets/image/cursor.png";
+  let clickCursorImage = "assets/image/cursor-click.png";
+
+  // Function to change cursor to a custom image
+  function changeCursorToCustomImage() {
+    document.body.style.cursor = `url("${clickCursorImage}"), auto`;
+  }
+
+  // Function to revert cursor to the previous image
+  function revertCursorToPrevious() {
+    document.body.style.cursor = `url("${defaultCursorImage}"), auto`;
+  }
+
+  // Add event listeners for mouse click and release
+  document.body.addEventListener("mousedown", changeCursorToCustomImage);
+  document.body.addEventListener("mouseup", revertCursorToPrevious);
+
+  </script>
 </body>
 </html>

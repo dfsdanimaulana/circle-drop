@@ -12,9 +12,10 @@ const {
   MouseConstraint,
 } = Matter;
 // check if viewport is mobile or not
-const isMobile = window.innerWidth <= 768;
+const maxDesktopWidth = 720;
+const isMobile = window.innerWidth <= maxDesktopWidth;
 
-const canvasWidth = isMobile ? window.innerWidth : 768;
+const canvasWidth = isMobile ? window.innerWidth : maxDesktopWidth;
 const canvasHeight = window.innerHeight;
 
 const canvas = document.getElementById("myCanvas"),
@@ -26,9 +27,9 @@ const backgroundColor = "#2e2e2e";
 // top circle initial position
 const positionY = 60;
 // scale between category
-const scale = isMobile ? 1.3 : 1.5;
+const scale = 1.3;
 // initial radius of first circle
-const initialValue = isMobile ? 20 : 25;
+const initialValue = 20;
 // Walls fill color
 const wallsColor = "#1c1c1c";
 // walls wallThickness
@@ -55,10 +56,10 @@ const colors = [
 
 const sfx = {
   merge: new Howl({
-    src: ["src/assets/audio/merge.wav"],
+    src: ["assets/audio/merge.wav"],
   }),
   gameOver: new Howl({
-    src: ["src/assets/audio/game_over.mp3"],
+    src: ["assets/audio/game_over.mp3"],
   }),
 };
 
@@ -255,9 +256,9 @@ function drawGameStatus() {
   ctx.fillStyle = "#e9e9e9";
   ctx.fillText(`SCORE: ${world.gameScore.toString()}`, 20, 30);
 
-  if (world.gameOver) {
+  if (!world.gameOver) {
     // draw game over message
-    const fromX = isMobile ? CW / 2 - 140 : CW / 2 - 400;
+    const fromX = CW / 2 - 145;
     ctx.font = "bold 50px Arial";
     ctx.fillStyle = "#191919";
     ctx.fillText(`GAME OVER`, fromX + 3, CH / 2 + 3);
