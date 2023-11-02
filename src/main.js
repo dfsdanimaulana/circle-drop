@@ -51,6 +51,15 @@ const colors = [
   "#7f003b",
 ];
 
+const sfx = {
+  merge: new Howl({
+    src: ["src/assets/audio/merge.wav"],
+  }),
+  gameOver: new Howl({
+    src: ["src/assets/audio/game_over.mp3"],
+  }),
+};
+
 // create an engine
 const engine = Engine.create();
 const world = engine.world;
@@ -153,18 +162,21 @@ Events.on(mouseConstraint, "mouseup", (event) => {
   createCircle();
 });
 
+// handle collision between two circle
 Events.on(engine, "collisionActive", (event) => {
-  // lists of active collision between two circle => []
-  const lists = event.source.pairs.list;
+  // pairs of active collision between two circle => []
+  const pairs = event.source.pairs.list;
 
   // check collision between circles
-  for (let i = 0; i < lists.length; i++) {
+  for (let i = 0; i < pairs.length; i++) {
     // get collided circle
-    const circleA = lists[i].bodyA;
-    const circleB = lists[i].bodyB;
+    const circleA = pairs[i].bodyA;
+    const circleB = pairs[i].bodyB;
 
     // filter collided circle
-    if (checkCollision(circleA, circleB)) {
+    if (checkCircleCollision(circleA, circleB)) {
+      // TODO: play collision audio
+      sfx.merge.play();
       // remove circleA in world
       Composite.remove(world, circleA);
 
@@ -200,6 +212,8 @@ Events.on(engine, "beforeUpdate", function (event) {
     // chek circle highest y coordinate
     const y = circles[i].position.y - circles[i].circleRadius;
     if (y <= 10 && !circles[i].isStatic) {
+      // TODO: play game over audio
+      sfx.gameOver.play();
       world.gameOver = true;
       // stop world for re render
       Render.stop(render);
@@ -219,7 +233,7 @@ const bottomWall = Bodies.rectangle(
   CW / 2,
   CH,
   CW,
-  wallThickness * 4,
+  wallThickness * 6,
   wallOptions
 );
 const leftWall = Bodies.rectangle(0, CH / 2, wallThickness, CH, wallOptions);
@@ -235,7 +249,7 @@ function drawGameStatus() {
   // draw game score
   ctx.fillStyle = "#e9e9e9";
   ctx.font = "15px Arial";
-  ctx.fillText(`Score: ${world.gameScore.toString()}`, 20, 30);
+  ctx.fillText(`SCORE: ${world.gameScore.toString()}`, 20, 30);
 
   if (world.gameOver) {
     // draw game over message
@@ -302,7 +316,7 @@ function createCircle() {
  * Check collision between two circle
  * @return Boolean
  */
-function checkCollision(circleA, circleB) {
+function checkCircleCollision(circleA, circleB) {
   return (
     circleA.category === circleB.category &&
     circleA.circleRadius === circleB.circleRadius &&
