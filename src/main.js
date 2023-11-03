@@ -111,8 +111,8 @@ window.addEventListener('load', () => {
     const world = engine.world
 
     // custom property
-    world.gameOver = false
-    world.gameScore = 0
+    let gameOver = false
+    let gameScore = 0
 
     // create a renderer
     const render = Render.create({
@@ -128,7 +128,8 @@ window.addEventListener('load', () => {
             showPositions: false
         }
     })
-
+    // canvas 2D context
+    const ctx = render.context
     // run the renderer
     Render.run(render)
     // create runner
@@ -228,7 +229,7 @@ window.addEventListener('load', () => {
             const bodyA = pairs[i].bodyA
             const bodyB = pairs[i].bodyB
             if ((bodyA.label === 'Circle Body' && bodyB.label === 'Floor') || (bodyB.label === 'Circle Body' && bodyA.label === 'Floor')) {
-              sfx.hit.play()
+                sfx.hit.play()
             }
         }
     })
@@ -253,7 +254,7 @@ window.addEventListener('load', () => {
                 Composite.remove(world, circleA)
 
                 // category is a number and it has 0 on it so we add 1 to prevent adding 0 value to gameScore
-                world.gameScore += circleB.category + 1
+                gameScore += (circleB.category + 1)
 
                 // update circleB
                 // check previous circleB category
@@ -293,7 +294,7 @@ window.addEventListener('load', () => {
                 if (!sfx.gameOver.playing()) {
                     sfx.gameOver.play()
                 }
-                world.gameOver = true
+                gameOver = true
                 // stop world for re render
                 Composite.clear(world, true)
                 Render.stop(render)
@@ -360,9 +361,6 @@ window.addEventListener('load', () => {
      * Draw game status on canvas
      */
     function drawGameStatus() {
-        // canvas 2D context
-        const ctx = render.context
-
         // get sign body
         const signBody = Composite.allBodies(world).filter((body) => body.label === 'Sign')[0]
         const signX = signBody.position.x
@@ -374,12 +372,12 @@ window.addEventListener('load', () => {
         ctx.rotate(signBody.angle)
         ctx.font = 'bold 15px Arial'
         ctx.fillStyle = '#070707'
-        ctx.fillText(`SCORE: ${world.gameScore.toString()}`, -40, 5)
+        ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
         ctx.fillStyle = '#e9e9e9'
-        ctx.fillText(`SCORE: ${world.gameScore.toString()}`, -40, 5)
+        ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
         ctx.restore()
 
-        if (world.gameOver) {
+        if (gameOver) {
             // draw game over message
             ctx.save()
             const fromX = CW / 2 - 145

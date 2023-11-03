@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -15,45 +15,21 @@
         <meta property="og:image:secure_url" content="https://circle-drop.netlify.com/assets/image/preview.png" />
         <meta property="og:image" content="https://circle-drop.netlify.com/assets/image/preview.png" />
         <meta property="og:site_name" content="Circle Drop | 2D Web Game" />
-
+        <link rel="stylesheet" href="style.css" type="text/css" media="all" />
         <title>Circle Drop | 2D Web Game @dnm17_</title>
-        <style>
-            body {
-                background-color: #222222;
-                cursor: url("assets/image/cursor.png"), auto;
-            }
-            .place-center {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                translate: -50% -50%;
-            }
-            .btn-container {
-                position: absolute;
-                z-index: 10;
-                top: 10px;
-                right: 10px;
-            }
-            .btn-music {
-                width: 35px;
-                height: 35px;
-                background-color: #fff;
-                border-radius: 8px;
-                border: 2px solid #a0a0a0;
-            }
-            .btn-music img {
-                width: 100%;
-                height: 100%;
-            }
-        </style>
     </head>
     <body>
         <!-- particles.js container -->
         <div id="particles-js"></div>
 
         <canvas id="myCanvas" class="place-center"></canvas>
-        <div id="loading" class="place-center">Loading...</div>
-
+        <div class="place-center">
+          
+        <div id="loading" class="lds-ripple">
+            <div></div>
+            <div></div>
+        </div>
+        </div>
         <div class="btn-container">
             <button id="btn-music-play" class="btn-music">
                 <img src="assets/image/icons/sound-play.svg" />
