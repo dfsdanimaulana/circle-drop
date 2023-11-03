@@ -256,6 +256,9 @@ const sign = Bodies.rectangle(50, 50, 100, 30, {
   render: {
     fillStyle: signColor,
   },
+  chamfer: {
+    radius: 5,
+  },
 });
 signId = sign.id;
 const constraintRender = {
