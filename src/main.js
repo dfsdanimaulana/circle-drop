@@ -68,7 +68,7 @@ window.addEventListener("load", () => {
         }),
     }
 
-    // music.bgm.play()
+    music.bgm.play()
 
     btnPlay.style.display = "none"
     btnStop.style.display = "block"
