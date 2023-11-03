@@ -22,7 +22,7 @@
                 background-color: rgb(231, 231, 231);
                 cursor: url("assets/image/cursor.png"), auto;
             }
-            #myCanvas {
+            .place-center {
                 position: absolute;
                 top: 50%;
                 left: 50%;
@@ -48,7 +48,8 @@
         </style>
     </head>
     <body>
-        <canvas id="myCanvas"></canvas>
+        <canvas id="myCanvas" class="place-center"></canvas>
+        <div id="loading" class="place-center">Loading...</div>
 
         <div class="btn-container">
             <button id="btn-music-play" class="btn-music" onclick="playMusic()">
@@ -58,6 +59,49 @@
                 <img src="assets/image/icons/sound-stop.svg" />
             </button>
         </div>
+
+        <div style="display: none">
+            <img src="assets/image/circles/orbs (1).png" />
+            <img src="assets/image/circles/orbs (2).png" />
+            <img src="assets/image/circles/orbs (3).png" />
+            <img src="assets/image/circles/orbs (4).png" />
+            <img src="assets/image/circles/orbs (5).png" />
+            <img src="assets/image/circles/orbs (6).png" />
+            <img src="assets/image/circles/orbs (7).png" />
+            <img src="assets/image/circles/orbs (8).png" />
+            <img src="assets/image/circles/orbs (9).png" />
+            <img src="assets/image/circles/orbs (10).png" />
+            <img src="assets/image/circles/orbs (11).png" />
+            <img src="assets/image/circles/orbs (12).png" />
+            <img src="assets/image/circles/orbs (13).png" />
+            <img src="assets/image/circles/orbs (14).png" />
+            <img src="assets/image/circles/orbs (15).png" />
+            <img src="assets/image/circles/orbs (16).png" />
+            <img src="assets/image/circles/orbs (17).png" />
+            <img src="assets/image/circles/orbs (18).png" />
+            <img src="assets/image/circles/orbs (19).png" />
+            <img src="assets/image/circles/orbs (20).png" />
+            <img src="assets/image/circles/orbs (21).png" />
+            <img src="assets/image/circles/orbs (22).png" />
+            <img src="assets/image/circles/orbs (23).png" />
+            <img src="assets/image/circles/orbs (24).png" />
+            <img src="assets/image/circles/orbs (25).png" />
+            <img src="assets/image/circles/orbs (26).png" />
+            <img src="assets/image/circles/orbs (27).png" />
+            <img src="assets/image/circles/orbs (28).png" />
+            <img src="assets/image/circles/orbs (29).png" />
+            <img src="assets/image/circles/orbs (30).png" />
+            <img src="assets/image/circles/orbs (31).png" />
+            <img src="assets/image/circles/orbs (32).png" />
+            <img src="assets/image/circles/orbs (33).png" />
+            <img src="assets/image/circles/orbs (34).png" />
+            <img src="assets/image/circles/orbs (35).png" />
+            <img src="assets/image/circles/orbs (36).png" />
+            <img src="assets/image/circles/orbs (37).png" />
+            <img src="assets/image/circles/orbs (38).png" />
+            <img src="assets/image/circles/orbs (39).png" />
+        </div>
+
         <script src="src/howler.core.min.js"></script>
         <script src="src/matter.min.js"></script>
         <script src="src/main.js"></script>
