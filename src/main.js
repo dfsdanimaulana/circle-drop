@@ -62,6 +62,9 @@ window.addEventListener('load', () => {
         }),
         gameOver: new Howl({
             src: ['assets/audio/game_over.mp3']
+        }),
+        hit: new Howl({
+            src: ['assets/audio/hit.wav']
         })
     }
 
@@ -217,6 +220,18 @@ window.addEventListener('load', () => {
             }, timeToNextCircle)
         }
     })
+    // handle collision between circle and floor
+    Events.on(engine, 'collisionStart', (event) => {
+        const pairs = event.pairs
+
+        for (let i = 0; i < pairs.length; i++) {
+            const bodyA = pairs[i].bodyA
+            const bodyB = pairs[i].bodyB
+            if ((bodyA.label === 'Circle Body' && bodyB.label === 'Floor') || (bodyB.label === 'Circle Body' && bodyA.label === 'Floor')) {
+              sfx.hit.play()
+            }
+        }
+    })
 
     // handle collision between two circle
     Events.on(engine, 'collisionActive', (event) => {
@@ -289,12 +304,19 @@ window.addEventListener('load', () => {
     // create walls
     const wallOptions = {
         isStatic: true,
+        label: 'Wall',
         render: {
             fillStyle: wallsColor
         }
     }
     const topWall = Bodies.rectangle(CW / 2, 0, CW, wallThickness, wallOptions)
-    const bottomWall = Bodies.rectangle(CW / 2, CH, CW, floorThickness, wallOptions)
+    const bottomWall = Bodies.rectangle(CW / 2, CH, CW, floorThickness, {
+        isStatic: true,
+        label: 'Floor',
+        render: {
+            fillStyle: wallsColor
+        }
+    })
     const leftWall = Bodies.rectangle(0, CH / 2, wallThickness, CH, wallOptions)
     const rightWall = Bodies.rectangle(CW, CH / 2, wallThickness, CH, wallOptions)
     Composite.add(world, [topWall, rightWall, leftWall, bottomWall])
