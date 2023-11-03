@@ -12,14 +12,14 @@
         <meta property="og:title" content="Circle Drop | 2D Web Game" />
         <meta property="og:description" content="Circle Drop 2D Web Game created using Matter.js by @dnm17_" />
         <meta property="og:url" content="https://circle-drop.netlify.com" />
-        <meta property="og:image:secure_url" content="https://circle-drop.netlify.com/assets/image/game-preview.png" />
-        <meta property="og:image" content="https://circle-drop.netlify.com/assets/image/game-preview.png" />
+        <meta property="og:image:secure_url" content="https://circle-drop.netlify.com/assets/image/preview.png" />
+        <meta property="og:image" content="https://circle-drop.netlify.com/assets/image/preview.png" />
         <meta property="og:site_name" content="Circle Drop | 2D Web Game" />
 
         <title>Circle Drop | 2D Web Game @dnm17_</title>
         <style>
             body {
-                background-color: rgb(231, 231, 231);
+                background-color: #222222;
                 cursor: url("assets/image/cursor.png"), auto;
             }
             .place-center {
@@ -48,6 +48,9 @@
         </style>
     </head>
     <body>
+        <!-- particles.js container -->
+        <div id="particles-js"></div>
+
         <canvas id="myCanvas" class="place-center"></canvas>
         <div id="loading" class="place-center">Loading...</div>
 
@@ -102,6 +105,7 @@
             <img src="assets/image/circles/orbs (39).png" />
         </div>
 
+        <script src="src/libs/particles.min.js"></script>
         <script src="src/libs/howler.core.min.js"></script>
         <script src="src/libs/matter.min.js"></script>
         <script src="src/main.js"></script>

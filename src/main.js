@@ -13,6 +13,11 @@ const btnStop = document.querySelector("#btn-music-stop")
 btnPlay.style.display = "none"
 btnStop.style.display = "none"
 
+if (!isMobile) {
+    particlesJS.load("particles-js", "particles.json", function () {
+        console.log("particles.js loaded - callback")
+    })
+}
 window.addEventListener("load", () => {
     document.querySelector("#loading").style.display = "none"
     // module aliases
