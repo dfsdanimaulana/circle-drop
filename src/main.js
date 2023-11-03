@@ -10,8 +10,6 @@ const canvasHeight = window.innerHeight
 
 const btnPlay = document.querySelector('#btn-music-play')
 const btnStop = document.querySelector('#btn-music-stop')
-btnPlay.style.display = 'none'
-btnStop.style.display = 'none'
 
 if (!isMobile) {
     particlesJS.load('particles-js', 'particles.json', function () {
@@ -19,6 +17,7 @@ if (!isMobile) {
     })
 }
 window.addEventListener('load', () => {
+    document.querySelector('.btn-container').style.display = 'block'
     document.querySelector('#loading').style.display = 'none'
     // module aliases
     const { Engine, Render, Runner, Bodies, Body, Constraint, Events, Composite, Mouse, MouseConstraint } = Matter
@@ -254,7 +253,7 @@ window.addEventListener('load', () => {
                 Composite.remove(world, circleA)
 
                 // category is a number and it has 0 on it so we add 1 to prevent adding 0 value to gameScore
-                gameScore += (circleB.category + 1)
+                gameScore += circleB.category + 1
 
                 // update circleB
                 // check previous circleB category
@@ -361,22 +360,6 @@ window.addEventListener('load', () => {
      * Draw game status on canvas
      */
     function drawGameStatus() {
-        // get sign body
-        const signBody = Composite.allBodies(world).filter((body) => body.label === 'Sign')[0]
-        const signX = signBody.position.x
-        const signY = signBody.position.y
-
-        ctx.save()
-        // draw game score
-        ctx.translate(signX, signY)
-        ctx.rotate(signBody.angle)
-        ctx.font = 'bold 15px Arial'
-        ctx.fillStyle = '#070707'
-        ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
-        ctx.fillStyle = '#e9e9e9'
-        ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
-        ctx.restore()
-
         if (gameOver) {
             // draw game over message
             ctx.save()
@@ -386,6 +369,23 @@ window.addEventListener('load', () => {
             ctx.fillText(`GAME OVER`, fromX + 3, CH / 2 + 3)
             ctx.fillStyle = '#f4f4f4'
             ctx.fillText(`GAME OVER`, fromX, CH / 2)
+            ctx.restore()
+        } else {
+            // update score ui
+            // get sign body
+            const signBody = Composite.allBodies(world).filter((body) => body.label === 'Sign')[0]
+            const signX = signBody.position.x
+            const signY = signBody.position.y
+
+            ctx.save()
+            // draw game score
+            ctx.translate(signX, signY)
+            ctx.rotate(signBody.angle)
+            ctx.font = 'bold 15px Arial'
+            ctx.fillStyle = '#070707'
+            ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
+            ctx.fillStyle = '#e9e9e9'
+            ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
             ctx.restore()
         }
     }

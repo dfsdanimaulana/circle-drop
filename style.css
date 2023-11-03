@@ -9,6 +9,7 @@ body {
     translate: -50% -50%;
 }
 .btn-container {
+  display: none;
     position: absolute;
     z-index: 10;
     top: 10px;
