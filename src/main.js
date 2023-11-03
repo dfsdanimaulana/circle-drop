@@ -10,12 +10,12 @@ const isMobile = window.innerWidth <= 768
 const canvasWidth = isMobile ? window.innerWidth : maxDesktopWidth
 const canvasHeight = window.innerHeight
 
-const canvas = document.getElementById("myCanvas"),
+const canvas = document.getElementById('myCanvas'),
     CW = (canvas.width = canvasWidth),
     CH = (canvas.height = canvasHeight)
 
 // background fill color
-const backgroundColor = "#2e2e2e"
+const backgroundColor = '#2e2e2e'
 // top circle initial position
 const positionY = 60
 // scale between category
@@ -23,9 +23,9 @@ const scale = 1.3
 // initial radius of first circle
 const initialValue = 20
 // walls fill color
-const wallsColor = "#1c1c1c"
+const wallsColor = '#1c1c1c'
 // sign fill color
-const signColor = "#986129"
+const signColor = '#986129'
 // walls wallThickness
 const wallThickness = 20
 // floor thickness
@@ -45,33 +45,33 @@ textures.sort(() => Math.random() - 0.5)
 // list of sfx
 const sfx = {
     merge: new Howl({
-        src: ["assets/audio/merge.wav"],
+        src: ['assets/audio/merge.wav']
     }),
     gameOver: new Howl({
-        src: ["assets/audio/game_over.mp3"],
-    }),
+        src: ['assets/audio/game_over.mp3']
+    })
 }
 
 // list of BGM
 const music = {
     enjoy: new Howl({
-        src: ["assets/audio/bgm/enjoy.mp3"],
-        loop: true,
-    }),
+        src: ['assets/audio/bgm/enjoy.mp3'],
+        loop: true
+    })
 }
 
 music.enjoy.play()
 
-const btnPlay = document.querySelector("#btn-music-play")
-const btnStop = document.querySelector("#btn-music-stop")
-btnPlay.style.display = "none"
-btnStop.style.display = "block"
+const btnPlay = document.querySelector('#btn-music-play')
+const btnStop = document.querySelector('#btn-music-stop')
+btnPlay.style.display = 'none'
+btnStop.style.display = 'block'
 
 // function to play BGM
 function playMusic() {
     if (!music.enjoy.playing()) {
-        btnPlay.style.display = "none"
-        btnStop.style.display = "block"
+        btnPlay.style.display = 'none'
+        btnStop.style.display = 'block'
         music.enjoy.play()
     }
 }
@@ -79,8 +79,8 @@ function playMusic() {
 // function to stop BGM
 function stopMusic() {
     if (music.enjoy.playing()) {
-        btnPlay.style.display = "block"
-        btnStop.style.display = "none"
+        btnPlay.style.display = 'block'
+        btnStop.style.display = 'none'
         music.enjoy.stop()
     }
 }
@@ -104,8 +104,8 @@ const render = Render.create({
         wireframes: false,
         showCollisions: false,
         showDebug: false,
-        showPositions: false,
-    },
+        showPositions: false
+    }
 })
 // canvas 2D context
 const ctx = render.context
@@ -122,9 +122,9 @@ const mouse = Mouse.create(render.canvas),
         constraint: {
             stiffness: 0.2,
             render: {
-                visible: false,
-            },
-        },
+                visible: false
+            }
+        }
     })
 // add mouse to world
 Composite.add(world, mouseConstraint)
@@ -133,7 +133,7 @@ render.mouse = mouse
 // fit the render viewport to the scene
 Render.lookAt(render, {
     min: { x: 0, y: 0 },
-    max: { x: CW, y: CH },
+    max: { x: CW, y: CH }
 })
 
 // define our categories (as bit fields, there are up to 32 available) to prevent mouse for moving the circle
@@ -161,7 +161,7 @@ for (let i = 0; i < textures.length; i++) {
         size: sizes[i],
         category: i,
         texture: textures[i],
-        textureScale: sizes[i] / textureImageRadius,
+        textureScale: sizes[i] / textureImageRadius
     })
 }
 
@@ -169,18 +169,18 @@ for (let i = 0; i < textures.length; i++) {
 createCircle()
 
 // listen to mouse movement and update static circle position
-Events.on(mouseConstraint, "mousemove", (event) => {
+Events.on(mouseConstraint, 'mousemove', (event) => {
     // get all circle body
     const circles = getBodies()
     // update latest circle position here
     Body.setPosition(circles[circles.length - 1], {
         x: event.mouse.position.x,
-        y: positionY,
+        y: positionY
     })
 })
 
 // listen to mouse left click and set circle static to false
-Events.on(mouseConstraint, "mouseup", (event) => {
+Events.on(mouseConstraint, 'mouseup', (event) => {
     // get all circle body
     const circles = getBodies()
     // set latest circle isStatic to false here
@@ -190,7 +190,7 @@ Events.on(mouseConstraint, "mouseup", (event) => {
 })
 
 // handle collision between two circle
-Events.on(engine, "collisionActive", (event) => {
+Events.on(engine, 'collisionActive', (event) => {
     // pairs of active collision between two circle => []
     const pairs = event.source.pairs.list
 
@@ -217,13 +217,13 @@ Events.on(engine, "collisionActive", (event) => {
             // update circleB category
             const newCategory = prevCategory < textures.length ? categories[prevCategory + 1] : prevCategory
             // update depends on previous circleB category
-            Body.set(circleB, "category", newCategory.category)
+            Body.set(circleB, 'category', newCategory.category)
             // update body texture
-            Body.set(circleB.render.sprite, "texture", newCategory.texture)
+            Body.set(circleB.render.sprite, 'texture', newCategory.texture)
             // update body texture scale X
-            Body.set(circleB.render.sprite, "xScale", newCategory.textureScale)
+            Body.set(circleB.render.sprite, 'xScale', newCategory.textureScale)
             // update body texture scale Y
-            Body.set(circleB.render.sprite, "yScale", newCategory.textureScale)
+            Body.set(circleB.render.sprite, 'yScale', newCategory.textureScale)
             // update circleB radius
             Body.scale(circleB, scale, scale)
         }
@@ -231,7 +231,7 @@ Events.on(engine, "collisionActive", (event) => {
 })
 
 // an example of using beforeUpdate event on an engine
-Events.on(engine, "beforeUpdate", function (event) {
+Events.on(engine, 'beforeUpdate', function (event) {
     // draw game score
     drawGameStatus()
     // get all bodies in world
@@ -241,8 +241,14 @@ Events.on(engine, "beforeUpdate", function (event) {
         // check circle highest y coordinate
         const y = circles[i].position.y - circles[i].circleRadius
         if (y <= 10 && !circles[i].isStatic) {
+            // stop bgm if playing
+            if (music.enjoy.playing()) {
+                music.enjoy.stop()
+            }
             // play game over audio
-            sfx.gameOver.play()
+            if (!sfx.gameOver.playing()) {
+                sfx.gameOver.play()
+            }
             world.gameOver = true
             // stop world for re render
             Render.stop(render)
@@ -254,8 +260,8 @@ Events.on(engine, "beforeUpdate", function (event) {
 const wallOptions = {
     isStatic: true,
     render: {
-        fillStyle: wallsColor,
-    },
+        fillStyle: wallsColor
+    }
 }
 const topWall = Bodies.rectangle(CW / 2, 0, CW, wallThickness, wallOptions)
 const bottomWall = Bodies.rectangle(CW / 2, CH, CW, floorThickness, wallOptions)
@@ -265,17 +271,17 @@ Composite.add(world, [topWall, rightWall, leftWall, bottomWall])
 
 // create hanging sign
 const sign = Bodies.rectangle(50, 50, 100, 30, {
-    label: "Sign",
+    label: 'Sign',
     render: {
-        fillStyle: signColor,
+        fillStyle: signColor
     },
     chamfer: {
-        radius: 5,
-    },
+        radius: 5
+    }
 })
 const constraintRender = {
-    strokeStyle: "#d9d9d9",
-    lineWidth: 1.5,
+    strokeStyle: '#d9d9d9',
+    lineWidth: 1.5
 }
 const constraintLength = 10
 const constraintLeft = Constraint.create({
@@ -284,7 +290,7 @@ const constraintLeft = Constraint.create({
     bodyB: sign,
     pointB: { x: -40, y: -15 },
     render: constraintRender,
-    length: constraintLength,
+    length: constraintLength
 })
 const constraintRight = Constraint.create({
     bodyA: topWall,
@@ -292,7 +298,7 @@ const constraintRight = Constraint.create({
     bodyB: sign,
     pointB: { x: 40, y: -15 },
     render: constraintRender,
-    length: constraintLength,
+    length: constraintLength
 })
 
 Composite.add(world, [constraintLeft, constraintRight, sign])
@@ -303,7 +309,7 @@ Composite.add(world, [constraintLeft, constraintRight, sign])
  */
 function drawGameStatus() {
     // get sign body
-    const signBody = Composite.allBodies(world).filter((body) => body.label === "Sign")[0]
+    const signBody = Composite.allBodies(world).filter((body) => body.label === 'Sign')[0]
     const signX = signBody.position.x
     const signY = signBody.position.y
     ctx.save()
@@ -311,10 +317,10 @@ function drawGameStatus() {
 
     ctx.translate(signX, signY)
     ctx.rotate(signBody.angle)
-    ctx.font = "bold 15px Arial"
-    ctx.fillStyle = "#070707"
+    ctx.font = 'bold 15px Arial'
+    ctx.fillStyle = '#070707'
     ctx.fillText(`SCORE: ${world.gameScore.toString()}`, -40, 5)
-    ctx.fillStyle = "#e9e9e9"
+    ctx.fillStyle = '#e9e9e9'
     ctx.fillText(`SCORE: ${world.gameScore.toString()}`, -40, 5)
     ctx.restore()
 
@@ -322,10 +328,10 @@ function drawGameStatus() {
         // draw game over message
         ctx.save()
         const fromX = CW / 2 - 145
-        ctx.font = "bold 50px Arial"
-        ctx.fillStyle = "#191919"
+        ctx.font = 'bold 50px Arial'
+        ctx.fillStyle = '#191919'
         ctx.fillText(`GAME OVER`, fromX + 3, CH / 2 + 3)
-        ctx.fillStyle = "#f4f4f4"
+        ctx.fillStyle = '#f4f4f4'
         ctx.fillText(`GAME OVER`, fromX, CH / 2)
         ctx.restore()
     }
@@ -357,7 +363,7 @@ function generateGeometricSequence(initialValue, commonRatio, numTerms) {
  * @return Body[]
  */
 function getBodies() {
-    return Composite.allBodies(world).filter((body) => body.label === "Circle Body")
+    return Composite.allBodies(world).filter((body) => body.label === 'Circle Body')
 }
 
 /**
@@ -371,15 +377,15 @@ function createCircle() {
         restitution: 0.5, // bounce level
         category: category.category,
         collisionFilter: {
-            mask: defaultCategory | redCategory,
+            mask: defaultCategory | redCategory
         },
         render: {
             sprite: {
                 texture: category.texture,
                 xScale: category.textureScale,
-                yScale: category.textureScale,
-            },
-        },
+                yScale: category.textureScale
+            }
+        }
     }
     const circle = Bodies.circle(CW / 2, positionY, category.size, options)
     Composite.add(world, circle)
@@ -393,8 +399,8 @@ function checkCircleCollision(circleA, circleB) {
     return (
         circleA.category === circleB.category &&
         circleA.circleRadius === circleB.circleRadius &&
-        circleA.label === "Circle Body" &&
-        circleB.label === "Circle Body" &&
+        circleA.label === 'Circle Body' &&
+        circleB.label === 'Circle Body' &&
         !circleA.isStatic &&
         !circleB.isStatic
     )
