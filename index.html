@@ -1,71 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- https://www.favicon.cc/ -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="description" content="Circle Drop 2D Web Game created using Matter.js by @dnm17_">
-  <meta name="author" content="@dnm17_">
-  <meta property="og:title" content="Circle Drop | 2D Web Game" />
-  <meta
-      property="og:description"
-      content="Circle Drop 2D Web Game created using Matter.js by @dnm17_"
-  />
-  <meta
-      property="og:url"
-      content="https://circle-drop.netlify.com"
-  />
-  <meta
-      property="og:image:secure_url"
-      content="https://circle-drop.netlify.com/assets/image/game-preview.png"
-  />
-  <meta
-      property="og:image"
-      content="https://circle-drop.netlify.com/assets/image/game-preview.png"
-  />
-  <meta property="og:site_name" content="Circle Drop | 2D Web Game" />
-  
-  <title>Circle Drop | 2D Web Game</title>
-  <style>
-    body {
-      background-color: rgb(231, 231, 231);
-      cursor: url("assets/image/cursor.png"), auto;
-    }
-    #myCanvas {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      translate: -50% -50%;
-    }
-  </style>
-</head>
-<body>
-  <canvas id="myCanvas"></canvas>
-  <script src="src/howler.core.min.js"></script>
-  <script src="src/matter.min.js"></script>
-  <script src="src/main.js"></script>
-  <script>
-  // add custom cursor
-  let defaultCursorImage = "assets/image/cursor.png";
-  let clickCursorImage = "assets/image/cursor-click.png";
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- https://www.favicon.cc/ -->
+        <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-  // Function to change cursor to a custom image
-  function changeCursorToCustomImage() {
-    document.body.style.cursor = `url("${clickCursorImage}"), auto`;
-  }
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="description" content="Circle Drop 2D Web Game created using Matter.js by @dnm17_" />
+        <meta name="author" content="@dnm17_" />
+        <meta property="og:title" content="Circle Drop | 2D Web Game" />
+        <meta property="og:description" content="Circle Drop 2D Web Game created using Matter.js by @dnm17_" />
+        <meta property="og:url" content="https://circle-drop.netlify.com" />
+        <meta property="og:image:secure_url" content="https://circle-drop.netlify.com/assets/image/game-preview.png" />
+        <meta property="og:image" content="https://circle-drop.netlify.com/assets/image/game-preview.png" />
+        <meta property="og:site_name" content="Circle Drop | 2D Web Game" />
 
-  // Function to revert cursor to the previous image
-  function revertCursorToPrevious() {
-    document.body.style.cursor = `url("${defaultCursorImage}"), auto`;
-  }
+        <title>Circle Drop | 2D Web Game</title>
+        <style>
+            body {
+                background-color: rgb(231, 231, 231);
+                cursor: url("assets/image/cursor.png"), auto;
+            }
+            #myCanvas {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                translate: -50% -50%;
+            }
+            .btn-container {
+                position: absolute;
+                z-index: 10;
+                top: 10px;
+                right: 10px;
+            }
+            .btn-music {
+                width: 35px;
+                height: 35px;
+                background-color: #fff;
+                border-radius: 8px;
+                border: 2px solid #a0a0a0;
+            }
+            .btn-music img {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="myCanvas"></canvas>
 
-  // Add event listeners for mouse click and release
-  document.body.addEventListener("mousedown", changeCursorToCustomImage);
-  document.body.addEventListener("mouseup", revertCursorToPrevious);
+        <div class="btn-container">
+            <button id="btn-music-play" class="btn-music" onclick="playMusic()">
+                <img src="assets/image/icons/sound-play.svg" />
+            </button>
+            <button id="btn-music-stop" class="btn-music" onclick="stopMusic()">
+                <img src="assets/image/icons/sound-stop.svg" />
+            </button>
+        </div>
+        <script src="src/howler.core.min.js"></script>
+        <script src="src/matter.min.js"></script>
+        <script src="src/main.js"></script>
+        <script>
+            // add custom cursor
+            let defaultCursorImage = "assets/image/cursor.png"
+            let clickCursorImage = "assets/image/cursor-click.png"
 
-  </script>
-</body>
+            // Function to change cursor to a custom image
+            function changeCursorToCustomImage() {
+                document.body.style.cursor = `url("${clickCursorImage}"), auto`
+            }
+
+            // Function to revert cursor to the previous image
+            function revertCursorToPrevious() {
+                document.body.style.cursor = `url("${defaultCursorImage}"), auto`
+            }
+
+            // Add event listeners for mouse click and release
+            document.body.addEventListener("mousedown", changeCursorToCustomImage)
+            document.body.addEventListener("mouseup", revertCursorToPrevious)
+        </script>
+    </body>
 </html>
