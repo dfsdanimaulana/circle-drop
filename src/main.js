@@ -91,6 +91,13 @@ window.addEventListener("load", () => {
         }
     }
 
+    btnPlay.onclick = () => {
+        playMusic()
+    }
+    btnStop.onclick = () => {
+        stopMusic()
+    }
+
     // create an engine
     const engine = Engine.create()
     const world = engine.world
