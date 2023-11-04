@@ -339,7 +339,7 @@ window.addEventListener("load", () => {
             fillStyle: signColor,
         },
         chamfer: {
-            radius: 5,
+            radius: 3,
         },
     })
     const constraintRender = {
@@ -394,7 +394,7 @@ window.addEventListener("load", () => {
             ctx.rotate(signBody.angle)
             ctx.font = "bold 15px Arial"
             ctx.fillStyle = "#070707"
-            ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
+            ctx.fillText(`SCORE: ${gameScore.toString()}`, -38, 7)
             ctx.fillStyle = "#e9e9e9"
             ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
             ctx.restore()
