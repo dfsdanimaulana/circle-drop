@@ -1,12 +1,37 @@
+
+
 body {
+    padding: 0;
+    margin: 0;
     background-color: #222222;
     cursor: url("assets/image/cursor.png"), auto;
+    
+}
+/* Hide the scrollbar in Webkit-based browsers (Chrome, Safari) */
+body::-webkit-scrollbar {
+    width: 0;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Hide the scrollbar in Firefox and other browsers */
+body {
+    scrollbar-width: none;
 }
 .place-center {
     position: absolute;
     top: 50%;
     left: 50%;
     translate: -50% -50%;
+}
+.particles-js-canvas-el, .place-center {
+    max-height: 100vh;
 }
 .btn-container {
     display: none;
