@@ -15,6 +15,7 @@ window.addEventListener("load", () => {
     if (!isMobile) {
         document.querySelector(".card").style.display = "block"
     }
+
     document.querySelector(".btn-container").style.display = "block"
     document.querySelector("#loading").style.display = "none"
 
@@ -205,14 +206,52 @@ window.addEventListener("load", () => {
     let allowNextCircle = true
     const timeToNextCircle = 1100
 
+    // get start canvas position
+    const startCanvasPosition = window.innerWidth / 2 - CW / 2
+    // get end canvas position
+    const endCanvasPosition = startCanvasPosition + CW
+
+    // set circle position back to center when mouse outside the canvas
+    window.addEventListener("mousemove", (e) => {
+        if (!allowNextCircle) return
+
+        // get all circle body
+        const circles = getBodies()
+
+        const mouseX = e.x
+        const mouseY = e.y
+
+        // check if mouse position is out of canvas
+        if (mouseX < startCanvasPosition || mouseX > endCanvasPosition || mouseY < 0 || mouseY > CH) {
+            // update latest circle position here
+            Body.setPosition(circles[circles.length - 1], {
+                x: CW / 2,
+                y: positionY,
+            })
+        }
+    })
+
     // listen to mouse movement and update static circle position
     Events.on(mouseConstraint, "mousemove", (event) => {
         if (!allowNextCircle) return
         // get all circle body
         const circles = getBodies()
+
+        const mouseX = event.mouse.position.x
+        const mouseY = event.mouse.position.y
+        // console.log(mouseX, mouseY)
+        // check if mouse position is out of canvas
+        if (mouseX < startCanvasPosition || mouseX > endCanvasPosition || mouseY < 0 || mouseY > CH) {
+            // update latest circle position here
+            Body.setPosition(circles[circles.length - 1], {
+                x: CW / 2,
+                y: positionY,
+            })
+        }
+
         // update latest circle position here
         Body.setPosition(circles[circles.length - 1], {
-            x: event.mouse.position.x,
+            x: mouseX,
             y: positionY,
         })
     })

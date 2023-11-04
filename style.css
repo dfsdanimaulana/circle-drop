@@ -83,15 +83,13 @@ body::-webkit-scrollbar-track {
 
 .card-list li.memory-card:before {
     background-image: url('assets/image/icons/twice.jpg');
-    /* Replace 'your-custom-marker.svg' with your SVG file */
+    border-radius: 5px;
 }
 .card-list li.tank-war:before {
     background-image: url('assets/image/icons/tank.png');
-    /* Replace 'your-custom-marker.svg' with your SVG file */
 }
 .card-list li.simple-snake:before {
     background-image: url('assets/image/icons/snake.png');
-    /* Replace 'your-custom-marker.svg' with your SVG file */
 }
 
 .card-list li a {
