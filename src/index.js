@@ -1,9 +1,34 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import Matter from "matter-js"
-import { Howl } from "howler"
+import Matter from 'matter-js'
+import { Howl } from 'howler'
 
-window.addEventListener("load", () => {
+import { onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, doc, updateDoc } from 'firebase/firestore'
+
+import { auth, db } from './firebase.js'
+
+// handle signup user with gmail
+const authGoogle = async () => {
+    const provider = new GoogleAuthProvider()
+
+    try {
+        const cred = await signInWithPopup(auth, provider)
+        const user = cred.user
+
+        // User signed up successfully with Google
+        console.log(user)
+    } catch (error) {
+        // Handle any errors that occurred during the sign-up process
+        console.log(error)
+    }
+}
+
+document.querySelector("#google-btn").addEventListener('click', () => {
+    authGoogle()
+})
+
+window.addEventListener('load', () => {
     // module aliases
     const { Engine, Render, Runner, Bodies, Body, Constraint, Events, Composite, Mouse, MouseConstraint } = Matter
 
@@ -15,33 +40,33 @@ window.addEventListener("load", () => {
     const canvasHeight = window.innerHeight
 
     if (!isMobile) {
-        document.querySelector(".card").style.display = "block"
+        document.querySelector('.card').style.display = 'block'
     }
 
-    document.querySelector(".btn-container").style.display = "block"
-    document.querySelector("#loading").style.display = "none"
+    document.querySelector('.btn-container').style.display = 'block'
+    document.querySelector('#loading').style.display = 'none'
 
     // list of particles
     const particles = [
-        "particles/particles.json",
-        "particles/particles-bubble.json",
-        "particles/particles-nasa.json",
-        "particles/particles-snow.json",
+        'particles/particles.json',
+        'particles/particles-bubble.json',
+        'particles/particles-nasa.json',
+        'particles/particles-snow.json'
     ]
 
     if (!isMobile) {
         // load particles
-        particlesJS.load("particles-js", getRandom(particles), function () {
-            console.log("particles.js loaded - callback")
+        particlesJS.load('particles-js', getRandom(particles), function () {
+            console.log('particles.js loaded - callback')
         })
     }
 
-    const canvas = document.getElementById("myCanvas"),
+    const canvas = document.getElementById('myCanvas'),
         CW = (canvas.width = canvasWidth),
         CH = (canvas.height = canvasHeight)
 
     // background fill color
-    const backgroundColor = "#2e2e2e"
+    const backgroundColor = '#2e2e2e'
     // top circle initial position
     const positionY = 60
     // scale between category
@@ -49,9 +74,9 @@ window.addEventListener("load", () => {
     // initial radius of first circle
     const initialValue = 20
     // walls fill color
-    const wallsColor = "#1c1c1c"
+    const wallsColor = '#1c1c1c'
     // sign fill color
-    const signColor = "#986129"
+    const signColor = '#986129'
     // walls wallThickness
     const wallThickness = 20
     // floor thickness
@@ -71,37 +96,37 @@ window.addEventListener("load", () => {
     // list of sfx
     const sfx = {
         merge: new Howl({
-            src: ["assets/audio/merge.wav"],
+            src: ['assets/audio/merge.wav']
         }),
         gameOver: new Howl({
-            src: ["assets/audio/game_over.mp3"],
+            src: ['assets/audio/game_over.mp3']
         }),
         hit: new Howl({
-            src: ["assets/audio/hit.wav"],
-        }),
+            src: ['assets/audio/hit.wav']
+        })
     }
 
     // list of BGM
     const music = {
         bgm: new Howl({
-            src: ["assets/audio/bgm/enjoy.mp3"],
-            loop: true,
-        }),
+            src: ['assets/audio/bgm/enjoy.mp3'],
+            loop: true
+        })
     }
 
     music.bgm.play()
 
-    const btnPlay = document.querySelector("#btn-music-play")
-    const btnStop = document.querySelector("#btn-music-stop")
+    const btnPlay = document.querySelector('#btn-music-play')
+    const btnStop = document.querySelector('#btn-music-stop')
 
-    btnPlay.style.display = "none"
-    btnStop.style.display = "block"
+    btnPlay.style.display = 'none'
+    btnStop.style.display = 'block'
 
     // function to play BGM
     function playMusic() {
         if (!music.bgm.playing()) {
-            btnPlay.style.display = "none"
-            btnStop.style.display = "block"
+            btnPlay.style.display = 'none'
+            btnStop.style.display = 'block'
             music.bgm.play()
         }
     }
@@ -109,8 +134,8 @@ window.addEventListener("load", () => {
     // function to stop BGM
     function stopMusic() {
         if (music.bgm.playing()) {
-            btnPlay.style.display = "block"
-            btnStop.style.display = "none"
+            btnPlay.style.display = 'block'
+            btnStop.style.display = 'none'
             music.bgm.stop()
         }
     }
@@ -141,8 +166,8 @@ window.addEventListener("load", () => {
             wireframes: false,
             showCollisions: false,
             showDebug: false,
-            showPositions: false,
-        },
+            showPositions: false
+        }
     })
     // canvas 2D context
     const ctx = render.context
@@ -159,9 +184,9 @@ window.addEventListener("load", () => {
             constraint: {
                 stiffness: 0.2,
                 render: {
-                    visible: false,
-                },
-            },
+                    visible: false
+                }
+            }
         })
     // add mouse to world
     Composite.add(world, mouseConstraint)
@@ -170,7 +195,7 @@ window.addEventListener("load", () => {
     // fit the render viewport to the scene
     Render.lookAt(render, {
         min: { x: 0, y: 0 },
-        max: { x: CW, y: CH },
+        max: { x: CW, y: CH }
     })
 
     // define our categories (as bit fields, there are up to 32 available) to prevent mouse for moving the circle
@@ -198,7 +223,7 @@ window.addEventListener("load", () => {
             size: sizes[i],
             category: i,
             texture: textures[i],
-            textureScale: sizes[i] / textureImageRadius,
+            textureScale: sizes[i] / textureImageRadius
         })
     }
 
@@ -214,7 +239,7 @@ window.addEventListener("load", () => {
     const endCanvasPosition = startCanvasPosition + CW
 
     // set circle position back to center when mouse outside the canvas
-    window.addEventListener("mousemove", (e) => {
+    window.addEventListener('mousemove', (e) => {
         if (!allowNextCircle) return
 
         // get all circle body
@@ -228,13 +253,13 @@ window.addEventListener("load", () => {
             // update latest circle position here
             Body.setPosition(circles[circles.length - 1], {
                 x: CW / 2,
-                y: positionY,
+                y: positionY
             })
         }
     })
 
     // listen to mouse movement and update static circle position
-    Events.on(mouseConstraint, "mousemove", (event) => {
+    Events.on(mouseConstraint, 'mousemove', (event) => {
         if (!allowNextCircle) return
         // get all circle body
         const circles = getBodies()
@@ -247,19 +272,19 @@ window.addEventListener("load", () => {
             // update latest circle position here
             Body.setPosition(circles[circles.length - 1], {
                 x: CW / 2,
-                y: positionY,
+                y: positionY
             })
         }
 
         // update latest circle position here
         Body.setPosition(circles[circles.length - 1], {
             x: mouseX,
-            y: positionY,
+            y: positionY
         })
     })
 
     // listen to mouse left click and set circle static to false
-    Events.on(mouseConstraint, "mouseup", (event) => {
+    Events.on(mouseConstraint, 'mouseup', (event) => {
         if (allowNextCircle) {
             allowNextCircle = false
             // get all circle body
@@ -276,20 +301,20 @@ window.addEventListener("load", () => {
         }
     })
     // handle collision between circle and floor
-    Events.on(engine, "collisionStart", (event) => {
+    Events.on(engine, 'collisionStart', (event) => {
         const pairs = event.pairs
 
         for (let i = 0; i < pairs.length; i++) {
             const bodyA = pairs[i].bodyA
             const bodyB = pairs[i].bodyB
-            if ((bodyA.label === "Circle Body" && bodyB.label === "Floor") || (bodyB.label === "Circle Body" && bodyA.label === "Floor")) {
+            if ((bodyA.label === 'Circle Body' && bodyB.label === 'Floor') || (bodyB.label === 'Circle Body' && bodyA.label === 'Floor')) {
                 sfx.hit.play()
             }
         }
     })
 
     // handle collision between two circle
-    Events.on(engine, "collisionActive", (event) => {
+    Events.on(engine, 'collisionActive', (event) => {
         // pairs of active collision between two circle => []
         const pairs = event.source.pairs.list
 
@@ -316,13 +341,13 @@ window.addEventListener("load", () => {
                 // update circleB category
                 const newCategory = prevCategory < textures.length ? categories[prevCategory + 1] : prevCategory
                 // update depends on previous circleB category
-                Body.set(circleB, "category", newCategory.category)
+                Body.set(circleB, 'category', newCategory.category)
                 // update body texture
-                Body.set(circleB.render.sprite, "texture", newCategory.texture)
+                Body.set(circleB.render.sprite, 'texture', newCategory.texture)
                 // update body texture scale X
-                Body.set(circleB.render.sprite, "xScale", newCategory.textureScale)
+                Body.set(circleB.render.sprite, 'xScale', newCategory.textureScale)
                 // update body texture scale Y
-                Body.set(circleB.render.sprite, "yScale", newCategory.textureScale)
+                Body.set(circleB.render.sprite, 'yScale', newCategory.textureScale)
                 // update circleB radius
                 Body.scale(circleB, scale, scale)
             }
@@ -330,7 +355,7 @@ window.addEventListener("load", () => {
     })
 
     // an example of using beforeUpdate event on an engine
-    Events.on(engine, "beforeUpdate", function (event) {
+    Events.on(engine, 'beforeUpdate', function (event) {
         // draw game score
         drawGameStatus()
         // get all bodies in world
@@ -359,18 +384,18 @@ window.addEventListener("load", () => {
     // create walls
     const wallOptions = {
         isStatic: true,
-        label: "Wall",
+        label: 'Wall',
         render: {
-            fillStyle: wallsColor,
-        },
+            fillStyle: wallsColor
+        }
     }
     const topWall = Bodies.rectangle(CW / 2, 0, CW, wallThickness, wallOptions)
     const bottomWall = Bodies.rectangle(CW / 2, CH, CW, floorThickness, {
         isStatic: true,
-        label: "Floor",
+        label: 'Floor',
         render: {
-            fillStyle: wallsColor,
-        },
+            fillStyle: wallsColor
+        }
     })
     const leftWall = Bodies.rectangle(0, CH / 2, wallThickness, CH, wallOptions)
     const rightWall = Bodies.rectangle(CW, CH / 2, wallThickness, CH, wallOptions)
@@ -378,17 +403,17 @@ window.addEventListener("load", () => {
 
     // create hanging sign
     const sign = Bodies.rectangle(50, 50, 100, 30, {
-        label: "Sign",
+        label: 'Sign',
         render: {
-            fillStyle: signColor,
+            fillStyle: signColor
         },
         chamfer: {
-            radius: 3,
-        },
+            radius: 3
+        }
     })
     const constraintRender = {
-        strokeStyle: "#9b9b9b",
-        lineWidth: 1.5,
+        strokeStyle: '#9b9b9b',
+        lineWidth: 1.5
     }
     const constraintLength = 10
     const constraintLeft = Constraint.create({
@@ -397,7 +422,7 @@ window.addEventListener("load", () => {
         bodyB: sign,
         pointB: { x: -40, y: -15 },
         render: constraintRender,
-        length: constraintLength,
+        length: constraintLength
     })
     const constraintRight = Constraint.create({
         bodyA: topWall,
@@ -405,7 +430,7 @@ window.addEventListener("load", () => {
         bodyB: sign,
         pointB: { x: 40, y: -15 },
         render: constraintRender,
-        length: constraintLength,
+        length: constraintLength
     })
 
     Composite.add(world, [constraintLeft, constraintRight, sign])
@@ -419,16 +444,16 @@ window.addEventListener("load", () => {
             // draw game over message
             ctx.save()
             const fromX = CW / 2 - 145
-            ctx.font = "bold 50px Arial"
-            ctx.fillStyle = "#191919"
+            ctx.font = 'bold 50px Arial'
+            ctx.fillStyle = '#191919'
             ctx.fillText(`GAME OVER`, fromX + 3, CH / 2 + 3)
-            ctx.fillStyle = "#f4f4f4"
+            ctx.fillStyle = '#f4f4f4'
             ctx.fillText(`GAME OVER`, fromX, CH / 2)
             ctx.restore()
         } else {
             // update score ui
             // get sign body
-            const signBody = Composite.allBodies(world).filter((body) => body.label === "Sign")[0]
+            const signBody = Composite.allBodies(world).filter((body) => body.label === 'Sign')[0]
             const signX = signBody.position.x
             const signY = signBody.position.y
 
@@ -436,10 +461,10 @@ window.addEventListener("load", () => {
             // draw game score
             ctx.translate(signX, signY)
             ctx.rotate(signBody.angle)
-            ctx.font = "bold 15px Arial"
-            ctx.fillStyle = "#070707"
+            ctx.font = 'bold 15px Arial'
+            ctx.fillStyle = '#070707'
             ctx.fillText(`SCORE: ${gameScore.toString()}`, -38, 7)
-            ctx.fillStyle = "#e9e9e9"
+            ctx.fillStyle = '#e9e9e9'
             ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
             ctx.restore()
         }
@@ -471,7 +496,7 @@ window.addEventListener("load", () => {
      * @return Body[]
      */
     function getBodies() {
-        return Composite.allBodies(world).filter((body) => body.label === "Circle Body")
+        return Composite.allBodies(world).filter((body) => body.label === 'Circle Body')
     }
 
     /**
@@ -485,15 +510,15 @@ window.addEventListener("load", () => {
             restitution: 0.5, // bounce level
             category: category.category,
             collisionFilter: {
-                mask: defaultCategory | redCategory,
+                mask: defaultCategory | redCategory
             },
             render: {
                 sprite: {
                     texture: category.texture,
                     xScale: category.textureScale,
-                    yScale: category.textureScale,
-                },
-            },
+                    yScale: category.textureScale
+                }
+            }
         }
         const circle = Bodies.circle(CW / 2, positionY, category.size, options)
         Composite.add(world, circle)
@@ -507,8 +532,8 @@ window.addEventListener("load", () => {
         return (
             circleA.category === circleB.category &&
             circleA.circleRadius === circleB.circleRadius &&
-            circleA.label === "Circle Body" &&
-            circleB.label === "Circle Body" &&
+            circleA.label === 'Circle Body' &&
+            circleB.label === 'Circle Body' &&
             !circleA.isStatic &&
             !circleB.isStatic
         )
