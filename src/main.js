@@ -5,15 +5,18 @@ window.addEventListener("load", () => {
     // module aliases
     const { Engine, Render, Runner, Bodies, Body, Constraint, Events, Composite, Mouse, MouseConstraint } = Matter
 
-    document.querySelector(".btn-container").style.display = "block"
-    document.querySelector("#loading").style.display = "none"
-
     // check if viewport is mobile or not
     const maxDesktopWidth = 430
     const isMobile = window.innerWidth <= 768
 
     const canvasWidth = isMobile ? window.innerWidth : maxDesktopWidth
     const canvasHeight = window.innerHeight
+
+    if (!isMobile) {
+        document.querySelector(".card").style.display = "block"
+    }
+    document.querySelector(".btn-container").style.display = "block"
+    document.querySelector("#loading").style.display = "none"
 
     // list of particles
     const particles = [

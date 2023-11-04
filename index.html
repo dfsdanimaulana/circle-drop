@@ -16,6 +16,10 @@
         <meta property="og:image" content="https://circle-drop.netlify.com/assets/image/preview.png" />
         <meta property="og:site_name" content="Circle Drop | 2D Web Game" />
 
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&display=swap" rel="stylesheet" />
+
         <link rel="stylesheet" href="style.css" type="text/css" media="all" />
         <title>Circle Drop | 2D Web Game @dnm17_</title>
     </head>
@@ -23,13 +27,35 @@
         <!-- particles.js container -->
         <div id="particles-js"></div>
 
+        <!-- game canvas -->
         <canvas id="myCanvas" class="place-center"></canvas>
+
+        <!-- loading -->
         <div class="place-center">
             <div id="loading" class="lds-ripple">
                 <div></div>
                 <div></div>
             </div>
         </div>
+
+        <!-- card -->
+        <div class="card">
+            <h2 class="card-title">Try My Other Games</h2>
+            <hr />
+            <ul class="card-list">
+                <li class="memory-card">
+                    <a href="https://twice-memory.netlify.app/" target="_blank">Twice - Memory Card</a>
+                </li>
+                <li class="tank-war">
+                    <a href="https://dfsdanimaulana.github.io/tank-war/" target="_blank">Tank War</a>
+                </li>
+                <li class="simple-snake">
+                    <a href="https://dfsdanimaulana.github.io/simple-snake/" target="_blank">Simple Snake</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- buttons music -->
         <div class="btn-container">
             <button id="btn-music-play" class="btn-music">
                 <img src="assets/image/icons/sound-play.svg" />
@@ -39,6 +65,7 @@
             </button>
         </div>
 
+        <!-- orbs -->
         <div style="display: none">
             <img src="assets/image/circles/orbs (1).png" />
             <img src="assets/image/circles/orbs (2).png" />
@@ -80,6 +107,8 @@
             <img src="assets/image/circles/orbs (38).png" />
             <img src="assets/image/circles/orbs (39).png" />
         </div>
+
+        <!-- copyright -->
         <div class="copyright">
             Copyright &copy; 2023
             <a href="https://instagram.com/dnm17_" target="_blank">dnm17_</a>
@@ -94,18 +123,19 @@
             let clickCursorImage = "assets/image/cursor-click.png"
 
             // Function to change cursor to a custom image
+            const myCanvas = document.getElementById("myCanvas")
             function changeCursorToCustomImage() {
-                document.body.style.cursor = `url("${clickCursorImage}"), auto`
+                myCanvas.style.cursor = `url("${clickCursorImage}"), auto`
             }
 
             // Function to revert cursor to the previous image
             function revertCursorToPrevious() {
-                document.body.style.cursor = `url("${defaultCursorImage}"), auto`
+                myCanvas.style.cursor = `url("${defaultCursorImage}"), auto`
             }
 
             // Add event listeners for mouse click and release
-            document.body.addEventListener("mousedown", changeCursorToCustomImage)
-            document.body.addEventListener("mouseup", revertCursorToPrevious)
+            myCanvas.addEventListener("mousedown", changeCursorToCustomImage)
+            myCanvas.addEventListener("mouseup", revertCursorToPrevious)
         </script>
     </body>
 </html>

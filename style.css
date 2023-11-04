@@ -4,7 +4,7 @@ body {
     padding: 0;
     margin: 0;
     background-color: #222222;
-    cursor: url("assets/image/cursor.png"), auto;
+    scrollbar-width: none;
     
 }
 /* Hide the scrollbar in Webkit-based browsers (Chrome, Safari) */
@@ -20,16 +20,85 @@ body::-webkit-scrollbar-track {
     background: transparent;
 }
 
-/* Hide the scrollbar in Firefox and other browsers */
-body {
-    scrollbar-width: none;
+#myCanvas {
+    cursor: url("assets/image/cursor.png"), auto;
 }
+
 .place-center {
     position: absolute;
     top: 50%;
     left: 50%;
     translate: -50% -50%;
 }
+.card {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 3px solid #a0a0a0;
+    padding: 0 20px;
+}
+.card-title {
+    color: #c9c9c9;
+    margin: 15px 0;
+}
+
+.card-list {
+    list-style-type: none;
+    /* Remove default list style */
+    padding: 0;
+    /* Remove default list padding */
+    font-family: 'Poppins', sans-serif; 
+}
+
+.card-list li {
+    margin: 5px 0;
+    padding: 0;
+    line-height: 1.5;
+    list-style: none;
+    /* Remove default list style */
+    display: flex;
+    align-items: center;
+}
+
+.card-list li a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.card-list li:before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    /* Adjust the width as needed */
+    height: 20px;
+    /* Adjust the height as needed */
+    background-size: cover;
+    /* Adjust the background size as needed */
+    margin-right: 10px;
+    /* Add spacing between the marker and the list item text */
+}
+
+.card-list li.memory-card:before {
+    background-image: url('assets/image/icons/twice.jpg');
+    /* Replace 'your-custom-marker.svg' with your SVG file */
+}
+.card-list li.tank-war:before {
+    background-image: url('assets/image/icons/tank.png');
+    /* Replace 'your-custom-marker.svg' with your SVG file */
+}
+.card-list li.simple-snake:before {
+    background-image: url('assets/image/icons/snake.png');
+    /* Replace 'your-custom-marker.svg' with your SVG file */
+}
+
+.card-list li a {
+    color: #c9c9c9;
+    text-decoration: none;
+}
+
 .particles-js-canvas-el, .place-center {
     max-height: 100vh;
 }
