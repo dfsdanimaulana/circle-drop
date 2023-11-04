@@ -4,12 +4,12 @@ import Matter from 'matter-js'
 import { Howl } from 'howler'
 
 import { onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
-import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, doc, updateDoc } from 'firebase/firestore'
+import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, doc, updateDoc, where, getDocs } from 'firebase/firestore'
 
 import { auth, db } from './firebase.js'
 
 // handle signup user with gmail
-const authGoogle = async () => {
+const signInGoogle = async () => {
     const provider = new GoogleAuthProvider()
 
     try {
@@ -17,18 +17,80 @@ const authGoogle = async () => {
         const user = cred.user
 
         // User signed up successfully with Google
-        console.log(user)
+        const data = {
+            uid: user.uid,
+            displayName: user.displayName,
+            score: 0
+        }
+        createUserData(data)
     } catch (error) {
         // Handle any errors that occurred during the sign-up process
         console.log(error)
     }
 }
 
-document.querySelector("#google-btn").addEventListener('click', () => {
-    authGoogle()
+document.querySelector('#sign-in-google').addEventListener('click', () => {
+    signInGoogle()
+})
+document.querySelector('#sign-out').addEventListener('click', () => {
+    signOut(auth)
 })
 
+let currentUser = null
+onAuthStateChanged(
+    auth,
+    (user) => {
+        if (user) {
+            currentUser = user
+        } else {
+            currentUser = null
+        }
+    },
+    (err) => {
+        console.log(err)
+    }
+)
+
+const colRef = collection(db, 'scores')
+
+const q = query(colRef, orderBy('score', 'desc'))
+onSnapshot(q, (snapshot) => {
+    datas = []
+    snapshot.docs.forEach((doc) => {
+        console.log(doc.data())
+    })
+})
+
+async function createUserData(data) {
+    try {
+        // Define the "uid" value you want to search for
+        const targetUid = data.uid
+
+        // Reference the collection you want to query
+        const collectionRef = collection(db, 'scores')
+
+        // Create a query to find documents with the specified "uid"
+        const q = query(collectionRef, where('uid', '==', targetUid))
+
+        const querySnapshot = await getDocs(q)
+        if (!querySnapshot.empty) {
+            // At least one document with the specified "uid" exists
+            querySnapshot.forEach((doc) => {
+                console.log(doc.data())
+            })
+        } else {
+            // No document with the specified "uid" was found
+            const res = await addDoc(colRef, data)
+            console.log('User data created', res)
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 window.addEventListener('load', () => {
+    // listen to auth user
+
     // module aliases
     const { Engine, Render, Runner, Bodies, Body, Constraint, Events, Composite, Mouse, MouseConstraint } = Matter
 
@@ -328,7 +390,7 @@ window.addEventListener('load', () => {
             if (checkCircleCollision(circleA, circleB)) {
                 // play collision audio
                 sfx.merge.play()
-
+                console.log(currentUser)
                 // remove circleA in world
                 Composite.remove(world, circleA)
 
