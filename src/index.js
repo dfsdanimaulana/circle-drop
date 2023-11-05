@@ -62,11 +62,12 @@ function setProfile(data) {
 }
 
 let currentUser = null
+let userDocs = null
+
 onAuthStateChanged(
     auth,
     (user) => {
         if (user) {
-            console.log(user)
             currentUser = user
             userExists()
         } else {
@@ -79,13 +80,6 @@ onAuthStateChanged(
     },
 )
 
-// data for testing
-currentUser = {
-    uid: "test",
-    displayName: "test",
-    score: 0,
-}
-
 googleButton.addEventListener("click", () => {
     signInGoogle()
 })
@@ -94,6 +88,8 @@ githubButton.addEventListener("click", () => {
 })
 signOutButton.addEventListener("click", () => {
     signOut(auth)
+    currentUser = null
+    userDocs = null
 })
 
 function userExists() {
@@ -118,12 +114,27 @@ onSnapshot(q, (snapshot) => {
         if (currentUser) {
             if (currentUser.uid === doc.data().uid) {
                 setProfile(doc.data())
+                const data = { ...doc.data(), id: doc.id }
+                userDocs = data
             }
         }
-
-        console.log(doc.data())
     })
 })
+
+async function updateUserScore(gameScore) {
+    if (currentUser && userDocs) {
+        try {
+            if (gameScore > userDocs.score) {
+                await updateDoc(doc(db, "scores", userDocs.id), {
+                    score: gameScore,
+                })
+                console.log("User score updated")
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
 
 async function createUserData(data) {
     try {
@@ -137,13 +148,8 @@ async function createUserData(data) {
         const q = query(collectionRef, where("uid", "==", targetUid))
 
         const querySnapshot = await getDocs(q)
-        if (!querySnapshot.empty) {
-            // At least one document with the specified "uid" exists
-            querySnapshot.forEach((doc) => {
-                console.log(doc.data())
-            })
-        } else {
-            // No document with the specified "uid" was found
+        if (querySnapshot.empty) {
+            // No document with the specified "uid" was found, create a new document
             const res = await addDoc(colRef, data)
             console.log("User data created", res)
         }
@@ -455,7 +461,6 @@ window.addEventListener("load", () => {
             if (checkCircleCollision(circleA, circleB)) {
                 // play collision audio
                 sfx.merge.play()
-                console.log(currentUser)
                 // remove circleA in world
                 Composite.remove(world, circleA)
 
@@ -504,6 +509,9 @@ window.addEventListener("load", () => {
                 // stop world for re render
                 Composite.clear(world, true)
                 Render.stop(render)
+
+                // update user score
+                updateUserScore(gameScore)
             }
         }
     })
