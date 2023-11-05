@@ -16,13 +16,7 @@ const signInGoogle = async () => {
         const cred = await signInWithPopup(auth, provider)
         const user = cred.user
 
-        // User signed up successfully with Google
-        const data = {
-            uid: user.uid,
-            displayName: user.displayName,
-            score: 0,
-        }
-        createUserData(data)
+        createUserData(user)
     } catch (error) {
         // Handle any errors that occurred during the sign-up process
         console.log(error)
@@ -35,13 +29,7 @@ const signInGithub = async () => {
         const cred = await signInWithPopup(auth, provider)
         const user = cred.user
 
-        // User signed up successfully with Github
-        const data = {
-            uid: user.uid,
-            displayName: user.displayName,
-            score: 0,
-        }
-        createUserData(data)
+        createUserData(user)
     } catch (error) {
         // Handle any errors that occurred during the sign-up process
         console.log(error)
@@ -55,10 +43,12 @@ const signOutButton = document.querySelector("#sign-out")
 const profileCard = document.querySelector(".profile")
 const profileName = document.querySelector("#profile-name")
 const profileScore = document.querySelector("#profile-score")
+const profileImage = document.querySelector("#profile-image")
 
 function setProfile(data) {
     profileName.textContent = data.displayName
     profileScore.textContent = data.score
+    profileImage.src = data.photoURL
 }
 
 let currentUser = null
@@ -136,10 +126,10 @@ async function updateUserScore(gameScore) {
     }
 }
 
-async function createUserData(data) {
+async function createUserData(user) {
     try {
         // Define the "uid" value you want to search for
-        const targetUid = data.uid
+        const targetUid = user.uid
 
         // Reference the collection you want to query
         const collectionRef = collection(db, "scores")
@@ -150,9 +140,18 @@ async function createUserData(data) {
         const querySnapshot = await getDocs(q)
         if (querySnapshot.empty) {
             // No document with the specified "uid" was found, create a new document
+            const data = {
+                uid: user.uid,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+                score: 0,
+                rank: 0,
+            }
+
             const res = await addDoc(colRef, data)
             console.log("User data created", res)
         }
+        window.location.reload()
     } catch (err) {
         console.log(err)
     }
@@ -568,9 +567,7 @@ window.addEventListener("load", () => {
         length: constraintLength,
     })
 
-    if (isMobile) {
-        Composite.add(world, [constraintLeft, constraintRight, sign])
-    }
+    Composite.add(world, [constraintLeft, constraintRight, sign])
 
     /** UTILS **/
     /**
@@ -590,22 +587,20 @@ window.addEventListener("load", () => {
         } else {
             // update score ui
             // get sign body
-            if (isMobile) {
-                const signBody = Composite.allBodies(world).filter((body) => body.label === "Sign")[0]
-                const signX = signBody.position.x
-                const signY = signBody.position.y
+            const signBody = Composite.allBodies(world).filter((body) => body.label === "Sign")[0]
+            const signX = signBody.position.x
+            const signY = signBody.position.y
 
-                ctx.save()
-                // draw game score
-                ctx.translate(signX, signY)
-                ctx.rotate(signBody.angle)
-                ctx.font = "bold 15px Arial"
-                ctx.fillStyle = "#070707"
-                ctx.fillText(`SCORE: ${gameScore.toString()}`, -38, 7)
-                ctx.fillStyle = "#e9e9e9"
-                ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
-                ctx.restore()
-            }
+            ctx.save()
+            // draw game score
+            ctx.translate(signX, signY)
+            ctx.rotate(signBody.angle)
+            ctx.font = "bold 15px Arial"
+            ctx.fillStyle = "#070707"
+            ctx.fillText(`SCORE: ${gameScore.toString()}`, -38, 7)
+            ctx.fillStyle = "#e9e9e9"
+            ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
+            ctx.restore()
         }
     }
 

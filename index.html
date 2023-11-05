@@ -18,7 +18,10 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&display=swap" rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+            rel="stylesheet"
+        />
 
         <link rel="stylesheet" href="style.css" type="text/css" media="all" />
         <title>Circle Drop | 2D Web Game @dnm17_</title>
@@ -73,12 +76,27 @@
                     <li class="simple-snake">
                         <a href="https://dfsdanimaulana.github.io/simple-snake/" target="_blank">Simple Snake</a>
                     </li>
+                    <li class="white-dog">
+                        <a href="https://dfsdanimaulana.github.io/web-game/side-scroller-game/index.html" target="_blank"
+                            >White Dog Adventure</a
+                        >
+                    </li>
                 </ul>
             </div>
             <div class="profile">
-                <span id="profile-name">loading...</span>
-                <hr />
-                <span>Best Score: <span id="profile-score">0</span></span>
+                <div class="profile_name">
+                    <img id="profile-image" src="assets/image/icons/profile-default.svg" alt="Profile Image" />
+                    <span id="profile-name">loading...</span>
+                </div>
+                <div class="profile_score">
+                    <div>
+                        <span>BEST: <span id="profile-score">0</span></span>
+                    </div>
+                    |
+                    <div>
+                        <span>RANK: <span id="profile-rank">0</span></span>
+                    </div>
+                </div>
             </div>
         </div>
 
