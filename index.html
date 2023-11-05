@@ -28,9 +28,26 @@
         <div id="particles-js"></div>
         <!-- game canvas -->
         <canvas id="myCanvas" class="place-center"></canvas>
-        <div class="place-center">
-          <button id="sign-in-google">Google</button>
-          <button id="sign-out">Sign Out</button>
+
+        <!-- buttons music -->
+        <div class="btn-container">
+            <button id="sign-in-google" class="btn btn-auth">
+                <img src="assets/image/icons/google.svg" />
+                <span>Google</span>
+            </button>
+            <button id="sign-in-github" class="btn btn-auth">
+                <img src="assets/image/icons/github.svg" />
+                <span>Github</span>
+            </button>
+            <button id="sign-out" class="btn btn-music">
+                <img src="assets/image/icons/sign-out.svg" />
+            </button>
+            <button id="btn-music-play" class="btn btn-music">
+                <img src="assets/image/icons/sound-play.svg" />
+            </button>
+            <button id="btn-music-stop" class="btn btn-music">
+                <img src="assets/image/icons/sound-stop.svg" />
+            </button>
         </div>
 
         <!-- loading -->
@@ -42,30 +59,27 @@
         </div>
 
         <!-- card -->
-        <div class="card">
-            <h2 class="card-title">Try My Other Games</h2>
-            <hr />
-            <ul class="card-list">
-                <li class="memory-card">
-                    <a href="https://twice-memory.netlify.app/" target="_blank">Twice - Memory Card</a>
-                </li>
-                <li class="tank-war">
-                    <a href="https://dfsdanimaulana.github.io/tank-war/" target="_blank">Tank War</a>
-                </li>
-                <li class="simple-snake">
-                    <a href="https://dfsdanimaulana.github.io/simple-snake/" target="_blank">Simple Snake</a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- buttons music -->
-        <div class="btn-container">
-            <button id="btn-music-play" class="btn-music">
-                <img src="assets/image/icons/sound-play.svg" />
-            </button>
-            <button id="btn-music-stop" class="btn-music">
-                <img src="assets/image/icons/sound-stop.svg" />
-            </button>
+        <div class="card-wrapper">
+            <div class="card">
+                <h2 class="card-title">Try My Other Games</h2>
+                <hr />
+                <ul class="card-list">
+                    <li class="memory-card">
+                        <a href="https://twice-memory.netlify.app/" target="_blank">Twice - Memory Card</a>
+                    </li>
+                    <li class="tank-war">
+                        <a href="https://dfsdanimaulana.github.io/tank-war/" target="_blank">Tank War</a>
+                    </li>
+                    <li class="simple-snake">
+                        <a href="https://dfsdanimaulana.github.io/simple-snake/" target="_blank">Simple Snake</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="profile">
+                <span id="profile-name">loading...</span>
+                <hr />
+                <span>Best Score: <span id="profile-score">0</span></span>
+            </div>
         </div>
 
         <!-- orbs -->

@@ -1,11 +1,9 @@
-
-
 body {
     padding: 0;
     margin: 0;
     background-color: #222222;
     scrollbar-width: none;
-    
+    font-family: "Poppins", sans-serif;
 }
 /* Hide the scrollbar in Webkit-based browsers (Chrome, Safari) */
 body::-webkit-scrollbar {
@@ -22,6 +20,10 @@ body::-webkit-scrollbar-track {
 
 #myCanvas {
     cursor: url("assets/image/cursor.png"), auto;
+    display: none;
+    box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.3),
+        0 6px 20px 0 rgba(0, 0, 0, 0.29);
 }
 
 .place-center {
@@ -30,15 +32,113 @@ body::-webkit-scrollbar-track {
     left: 50%;
     translate: -50% -50%;
 }
-.card {
+
+.btn-container {
+    position: absolute;
+    z-index: 10;
+    top: 10px;
+    right: 10px;
+    display: none;
+    justify-items: center;
+    gap: 5px;
+}
+
+.btn {
+    height: 35px;
+    background-color: rgba(34, 34, 34, 0.5);
+    display: none;
+    border-radius: 8px;
+    border: 2px solid #a0a0a0;
+    color: #ffffff;
+    box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.3),
+        0 6px 20px 0 rgba(0, 0, 0, 0.29);
+}
+.btn:hover {
+    background-color: rgba(68, 68, 68, 0.8);
+}
+.btn-auth {
+    width: 100px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.btn-auth img {
+    height: 80%;
+}
+.btn-music {
+    width: 35px;
+}
+.btn-music img {
+    width: 100%;
+    height: 100%;
+}
+/* Styles for desktop */
+@media screen and (min-width: 1024px) {
+    /* Your desktop-specific CSS rules go here */
+    body {
+        font-size: 18px;
+    }
+}
+
+/* Styles for mobile */
+@media screen and (max-width: 1023px) {
+    /* Your mobile-specific CSS rules go here */
+    body {
+        font-size: 16px;
+    }
+    .btn-container {
+        flex-direction: column-reverse;
+    }
+    .btn-auth {
+        width: 35px;
+    }
+    .btn-auth span {
+        display: none;
+    }
+}
+
+.card-wrapper {
     display: none;
     position: absolute;
     top: 20px;
     left: 20px;
+}
+.profile {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    margin-top: 30px;
+    color: #c9c9c9;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 2px solid #a0a0a0;
+    box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.3),
+        0 6px 20px 0 rgba(0, 0, 0, 0.29);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    max-width: max-content;
+    font-weight: bold;
+}
+.profile hr {
+    margin: 10px 0;
+}
+.profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.card {
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     border: 3px solid #a0a0a0;
     padding: 0 20px;
+    box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.3),
+        0 6px 20px 0 rgba(0, 0, 0, 0.29);
 }
 .card-title {
     color: #c9c9c9;
@@ -50,7 +150,6 @@ body::-webkit-scrollbar-track {
     /* Remove default list style */
     padding: 0;
     /* Remove default list padding */
-    font-family: 'Poppins', sans-serif; 
 }
 
 .card-list li {
@@ -82,14 +181,14 @@ body::-webkit-scrollbar-track {
 }
 
 .card-list li.memory-card:before {
-    background-image: url('assets/image/icons/twice.jpg');
+    background-image: url("assets/image/icons/twice.jpg");
     border-radius: 5px;
 }
 .card-list li.tank-war:before {
-    background-image: url('assets/image/icons/tank.png');
+    background-image: url("assets/image/icons/tank.png");
 }
 .card-list li.simple-snake:before {
-    background-image: url('assets/image/icons/snake.png');
+    background-image: url("assets/image/icons/snake.png");
 }
 
 .card-list li a {
@@ -97,27 +196,11 @@ body::-webkit-scrollbar-track {
     text-decoration: none;
 }
 
-.particles-js-canvas-el, .place-center {
+.particles-js-canvas-el,
+.place-center {
     max-height: 100vh;
 }
-.btn-container {
-    display: none;
-    position: absolute;
-    z-index: 10;
-    top: 10px;
-    right: 10px;
-}
-.btn-music {
-    width: 35px;
-    height: 35px;
-    background-color: #222222;
-    border-radius: 8px;
-    border: 2px solid #a0a0a0;
-}
-.btn-music img {
-    width: 100%;
-    height: 100%;
-}
+
 .copyright {
     font-family: sans-serif;
     position: fixed;

@@ -3,8 +3,8 @@
 import Matter from "matter-js"
 import { Howl } from "howler"
 
-import { onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
-import { collection, addDoc, onSnapshot, serverTimestamp, query, orderBy, doc, updateDoc, where, getDocs } from "firebase/firestore"
+import { onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth"
+import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, where, getDocs } from "firebase/firestore"
 
 import { auth, db } from "./firebase.js"
 
@@ -28,22 +28,50 @@ const signInGoogle = async () => {
         console.log(error)
     }
 }
+const signInGithub = async () => {
+    const provider = new GithubAuthProvider()
 
-document.querySelector("#sign-in-google").addEventListener("click", () => {
-    signInGoogle()
-})
-document.querySelector("#sign-out").addEventListener("click", () => {
-    signOut(auth)
-})
+    try {
+        const cred = await signInWithPopup(auth, provider)
+        const user = cred.user
+
+        // User signed up successfully with Github
+        const data = {
+            uid: user.uid,
+            displayName: user.displayName,
+            score: 0,
+        }
+        createUserData(data)
+    } catch (error) {
+        // Handle any errors that occurred during the sign-up process
+        console.log(error)
+    }
+}
+
+const googleButton = document.querySelector("#sign-in-google")
+const githubButton = document.querySelector("#sign-in-github")
+const signOutButton = document.querySelector("#sign-out")
+
+const profileCard = document.querySelector(".profile")
+const profileName = document.querySelector("#profile-name")
+const profileScore = document.querySelector("#profile-score")
+
+function setProfile(data) {
+    profileName.textContent = data.displayName
+    profileScore.textContent = data.score
+}
 
 let currentUser = null
 onAuthStateChanged(
     auth,
     (user) => {
         if (user) {
+            console.log(user)
             currentUser = user
+            userExists()
         } else {
             currentUser = null
+            userNotExists()
         }
     },
     (err) => {
@@ -51,12 +79,48 @@ onAuthStateChanged(
     },
 )
 
+// data for testing
+currentUser = {
+    uid: "test",
+    displayName: "test",
+    score: 0,
+}
+
+googleButton.addEventListener("click", () => {
+    signInGoogle()
+})
+githubButton.addEventListener("click", () => {
+    signInGithub()
+})
+signOutButton.addEventListener("click", () => {
+    signOut(auth)
+})
+
+function userExists() {
+    googleButton.style.display = "none"
+    githubButton.style.display = "none"
+    signOutButton.style.display = "flex"
+    profileCard.style.display = "flex"
+}
+
+function userNotExists() {
+    googleButton.style.display = "flex"
+    githubButton.style.display = "flex"
+    signOutButton.style.display = "none"
+    profileCard.style.display = "none"
+}
+
 const colRef = collection(db, "scores")
 
 const q = query(colRef, orderBy("score", "desc"))
 onSnapshot(q, (snapshot) => {
-    datas = []
     snapshot.docs.forEach((doc) => {
+        if (currentUser) {
+            if (currentUser.uid === doc.data().uid) {
+                setProfile(doc.data())
+            }
+        }
+
         console.log(doc.data())
     })
 })
@@ -101,19 +165,24 @@ window.addEventListener("load", () => {
     const canvasWidth = isMobile ? window.innerWidth : maxDesktopWidth
     const canvasHeight = window.innerHeight
 
-    if (!isMobile) {
-        document.querySelector(".card").style.display = "block"
-    }
+    const canvas = document.getElementById("myCanvas"),
+        CW = (canvas.width = canvasWidth),
+        CH = (canvas.height = canvasHeight)
 
-    document.querySelector(".btn-container").style.display = "block"
+    // show or hide after load
+    document.querySelector(".btn-container").style.display = "flex"
     document.querySelector("#loading").style.display = "none"
+    canvas.style.display = "block"
+    if (!isMobile) {
+        document.querySelector(".card-wrapper").style.display = "block"
+    }
 
     // list of particles
     const particles = [
-        "particles/particles.json",
-        "particles/particles-bubble.json",
-        "particles/particles-nasa.json",
-        "particles/particles-snow.json",
+        "src/particles/particles.json",
+        "src/particles/particles-bubble.json",
+        "src/particles/particles-nasa.json",
+        "src/particles/particles-snow.json",
     ]
 
     if (!isMobile) {
@@ -122,10 +191,6 @@ window.addEventListener("load", () => {
             console.log("particles.js loaded - callback")
         })
     }
-
-    const canvas = document.getElementById("myCanvas"),
-        CW = (canvas.width = canvasWidth),
-        CH = (canvas.height = canvasHeight)
 
     // background fill color
     const backgroundColor = "#2e2e2e"
@@ -495,7 +560,9 @@ window.addEventListener("load", () => {
         length: constraintLength,
     })
 
-    Composite.add(world, [constraintLeft, constraintRight, sign])
+    if (isMobile) {
+        Composite.add(world, [constraintLeft, constraintRight, sign])
+    }
 
     /** UTILS **/
     /**
@@ -515,20 +582,22 @@ window.addEventListener("load", () => {
         } else {
             // update score ui
             // get sign body
-            const signBody = Composite.allBodies(world).filter((body) => body.label === "Sign")[0]
-            const signX = signBody.position.x
-            const signY = signBody.position.y
+            if (isMobile) {
+                const signBody = Composite.allBodies(world).filter((body) => body.label === "Sign")[0]
+                const signX = signBody.position.x
+                const signY = signBody.position.y
 
-            ctx.save()
-            // draw game score
-            ctx.translate(signX, signY)
-            ctx.rotate(signBody.angle)
-            ctx.font = "bold 15px Arial"
-            ctx.fillStyle = "#070707"
-            ctx.fillText(`SCORE: ${gameScore.toString()}`, -38, 7)
-            ctx.fillStyle = "#e9e9e9"
-            ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
-            ctx.restore()
+                ctx.save()
+                // draw game score
+                ctx.translate(signX, signY)
+                ctx.rotate(signBody.angle)
+                ctx.font = "bold 15px Arial"
+                ctx.fillStyle = "#070707"
+                ctx.fillText(`SCORE: ${gameScore.toString()}`, -38, 7)
+                ctx.fillStyle = "#e9e9e9"
+                ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
+                ctx.restore()
+            }
         }
     }
 

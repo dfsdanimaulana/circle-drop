@@ -4,10 +4,11 @@
     "name": "my-webpack-project",
     "scripts": {
         "build": "webpack --mode=production --node-env=production",
-        "dev": "webpack --mode=development --watch",
-        "watch": "webpack --watch",
+        "build:dev": "webpack --mode=development --watch",
+        "serve": "npx live-server",
         "format": "prettier --write **/*.js",
-        "lint": "eslint **/*.js"
+        "lint": "eslint **/*.js",
+        "dev": "npm-run-all --parallel build:dev serve"
     },
     "devDependencies": {
         "@babel/core": "^7.23.2",
@@ -16,6 +17,7 @@
         "css-loader": "^6.8.1",
         "eslint": "^8.53.0",
         "mini-css-extract-plugin": "^2.7.6",
+        "npm-run-all": "^4.1.5",
         "prettier": "^3.0.3",
         "style-loader": "^3.3.3",
         "webpack": "^5.89.0",
