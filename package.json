@@ -5,13 +5,16 @@
     "scripts": {
         "build": "webpack --mode=production --node-env=production",
         "dev": "webpack --mode=development --watch",
-        "watch": "webpack --watch"
+        "watch": "webpack --watch",
+        "format": "prettier --write **/*.js",
+        "lint": "eslint **/*.js"
     },
     "devDependencies": {
         "@babel/core": "^7.23.2",
         "@babel/preset-env": "^7.23.2",
         "babel-loader": "^9.1.3",
         "css-loader": "^6.8.1",
+        "eslint": "^8.53.0",
         "mini-css-extract-plugin": "^2.7.6",
         "prettier": "^3.0.3",
         "style-loader": "^3.3.3",
