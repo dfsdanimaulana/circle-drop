@@ -129,6 +129,90 @@ body::-webkit-scrollbar-track {
     }
 }
 
+.leaderboard-container {
+    display: none;
+    position: absolute;
+    top: 70px;
+    right: 30px;
+    width: 380px;
+    border: 3px solid #a0a0a0;
+    border-radius: 10px;
+    min-height: 80%;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(49, 49, 49, 0.7));
+    /* box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.3),
+        0 6px 20px 0 rgba(0, 0, 0, 0.29); */
+}
+
+.leaderboard-title {
+    /* border: 1px solid white; */
+    margin: 10px;
+    color: #c9c9c9;
+}
+.leaderboard-list {
+    width: 100%;
+    /* border: 1px solid white; */
+    flex: 1;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.leaderboard-item {
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 5px 10px;
+    margin: 0 5px;
+    background: linear-gradient(to right, rgba(209, 196, 79, 0.8), rgba(221, 208, 93, 0.8));
+    border-radius: 10px;
+}
+.leaderboard-rank span {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    /* border-radius: 50%;
+    background-color: rgba(255, 255, 0, 0.756); */
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: rgb(255, 255, 255);
+    border: 2px solid rgb(218, 213, 213);
+}
+.leaderboard-image {
+    height: 100%;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+.leaderboard-name {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.leaderboard-name span:first-child {
+    color: white;
+    font-weight: 500;
+}
+.leaderboard-score {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0;
+}
+.leaderboard-score img {
+    height: 100%;
+}
+.leaderboard-score span {
+    color: white;
+    font-weight: 700;
+    padding-right: 10px;
+}
+
 .card-wrapper {
     display: none;
     position: absolute;
@@ -168,15 +252,29 @@ body::-webkit-scrollbar-track {
     flex-direction: column;
     gap: 5px;
 }
-.profile_badge {
+.badge {
     color: white;
-    background: linear-gradient(to right, #ff7300, #ff0000);
     font-size: 12px;
     line-height: 12px;
     font-weight: 600;
     border-radius: 10px;
     padding: 3px 8px;
     max-width: fit-content;
+}
+.badge-inti-bumi {
+    background: linear-gradient(to right, #3861d3, #032ea7);
+}
+.badge-sepuh {
+    background: linear-gradient(to right, #ff7300, #ff0000);
+}
+.badge-senior {
+    background: linear-gradient(to right, #f1ef58, #e0e400);
+}
+.badge-junior {
+    background: linear-gradient(to right, #96ee44, #46a804);
+}
+.badge-pemula {
+    background: linear-gradient(to right, #32cfd4, #029ea3);
 }
 .profile_score {
     display: flex;

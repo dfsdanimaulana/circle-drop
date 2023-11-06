@@ -87,7 +87,7 @@
         <!-- card -->
         <div class="card-wrapper">
             <div class="card">
-                <h2 class="card-title">Try My Other Games Bro</h2>
+                <h2 class="card-title">Try My Other Games</h2>
                 <hr />
                 <ul class="card-list">
                     <li class="memory-card">
@@ -111,7 +111,7 @@
                     <img id="profile-image" src="assets/image/icons/profile-default.svg" alt="Profile Image" />
                     <div>
                         <span id="profile-name">loading...</span>
-                        <span class="profile_badge" id="profile-badge">👑 Inti Bumi</span>
+                        <span class="badge" id="profile-badge">👑 Inti Bumi</span>
                     </div>
                 </div>
                 <div class="profile_score">
@@ -121,6 +121,32 @@
                     |
                     <div>
                         <span>RANK: <span id="profile-rank">00</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="leaderboard-container">
+            <h2 class="leaderboard-title">Leaderboard</h2>
+            <div class="leaderboard-list" id="leaderboard-list">
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">
+                        <span style="background-color: #eeff00; border-radius: 50%">1</span>
+                    </div>
+
+                    <img
+                        class="leaderboard-image"
+                        src="assets/image/icons/profile-default.svg"
+                        onerror="this.onerror=null; this.src='assets/image/icons/profile-default.svg';"
+                    />
+
+                    <div class="leaderboard-name">
+                        <span>Loading...</span>
+                        <span class="badge">__ __ __</span>
+                    </div>
+                    <div class="leaderboard-score">
+                        <img src="assets/image/icons/star.svg" />
+                        <span>000</span>
                     </div>
                 </div>
             </div>

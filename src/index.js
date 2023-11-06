@@ -7,7 +7,7 @@ import Matter from "matter-js"
 import { Howl } from "howler"
 
 import { onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth"
-import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, where, getDocs } from "firebase/firestore"
+import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, where, getDocs, serverTimestamp } from "firebase/firestore"
 
 import { auth, db } from "./firebase.js"
 
@@ -84,11 +84,16 @@ const profileCard = document.querySelector(".profile")
 const profileName = document.querySelector("#profile-name")
 const profileScore = document.querySelector("#profile-score")
 const profileImage = document.querySelector("#profile-image")
+const profileBadge = document.querySelector("#profile-badge")
+const profileRank = document.querySelector("#profile-rank")
 
 function setProfile(data) {
     profileName.textContent = data.displayName
     profileScore.textContent = data.score
     profileImage.src = data.photoURL
+    profileBadge.textContent = data.badge.name
+    profileBadge.classList.add(data.badge.className)
+    profileRank.textContent = data.rank
 }
 
 let currentUser = null
@@ -139,21 +144,6 @@ function userNotExists() {
     profileCard.style.display = "none"
 }
 
-const colRef = collection(db, "scores")
-
-const q = query(colRef, orderBy("score", "desc"))
-onSnapshot(q, (snapshot) => {
-    snapshot.docs.forEach((doc) => {
-        if (currentUser) {
-            if (currentUser.uid === doc.data().uid) {
-                setProfile(doc.data())
-                const data = { ...doc.data(), id: doc.id }
-                userDocs = data
-            }
-        }
-    })
-})
-
 async function updateUserScore(gameScore) {
     if (currentUser && userDocs) {
         try {
@@ -187,8 +177,9 @@ async function createUserData(user) {
                 uid: user.uid,
                 displayName: user.displayName,
                 photoURL: user.photoURL,
+                provider: user.providerData[0].providerId,
                 score: 0,
-                rank: 0,
+                created_at: serverTimestamp(),
             }
             await addDoc(colRef, data)
         }
@@ -221,7 +212,101 @@ window.addEventListener("load", () => {
     canvas.style.display = "block"
     if (!isMobile) {
         document.querySelector(".card-wrapper").style.display = "block"
+        document.querySelector(".leaderboard-container").style.display = "flex"
     }
+
+    const leaderboardList = document.querySelector("#leaderboard-list")
+
+    // handle leaderboard content
+    const colsRef = collection(db, "scores")
+
+    const badges = [
+        {
+            name: "🌎 Inti Bumi",
+            className: "badge-inti-bumi",
+            rankColor: "rgba(251, 255, 0, 0.7)",
+        },
+        {
+            name: "👑 Sepuh",
+            className: "badge-sepuh",
+            rankColor: "#C0C0C0",
+        },
+        {
+            name: "👨‍🎓 Senior",
+            className: "badge-senior",
+            rankColor: "#CD7F32",
+        },
+        {
+            name: "👨‍💼 Junior",
+            className: "badge-junior",
+            rankColor: "#036cc2",
+        },
+        {
+            name: "👶 Pemula",
+            className: "badge-pemula",
+            rankColor: "#00b09b",
+        },
+    ]
+
+    const qs = query(colsRef, orderBy("score", "desc"), orderBy("created_at", "desc"))
+    onSnapshot(
+        qs,
+        (snapshot) => {
+            leaderboardList.innerHTML = ""
+            snapshot.docs.forEach((doc, index) => {
+                const data = { ...doc.data(), id: doc.id }
+
+                if (index >= 0 && index <= 2) {
+                    data.badge = badges[index]
+                } else if (index >= 3 && index <= 9) {
+                    data.badge = badges[3]
+                } else {
+                    data.badge = badges[4]
+                }
+
+                const score = data.score.toString()
+                if (score.length < 3) {
+                    data.score = "0".repeat(3 - score.length) + score
+                }
+
+                data.rank = index + 1
+
+                const element = `<div class="leaderboard-item">
+                    <div class="leaderboard-rank" >
+                        <span style="background-color: ${data.badge.rankColor};border-radius: 50%;" >${index + 1}</span>
+                    </div>
+
+                    <img class="leaderboard-image" src="${
+                        data.photoURL
+                    }"  onerror="this.onerror=null; this.src='assets/image/icons/profile-default.svg';"/>
+
+                    <div class="leaderboard-name">
+                        <span>${data.displayName}</span>
+                        <span class="badge ${data.badge.className}">${data.badge.name}</span>
+                    </div>
+                    <div class="leaderboard-score">
+                        <img src="assets/image/icons/star.svg" />
+                        <span>${data.score}</span>
+                    </div>
+                </div>
+            `
+
+                if (leaderboardList) {
+                    leaderboardList.innerHTML += element
+                }
+
+                if (currentUser) {
+                    if (currentUser.uid === doc.data().uid) {
+                        setProfile(data)
+                        userDocs = data
+                    }
+                }
+            })
+        },
+        (error) => {
+            console.log(error)
+        },
+    )
 
     // list of particles
     const particles = [
