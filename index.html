@@ -87,7 +87,7 @@
         <!-- card -->
         <div class="card-wrapper">
             <div class="card">
-                <h2 class="card-title">Try My Other Games</h2>
+                <h2 class="card-title">Try My Other Games Bro</h2>
                 <hr />
                 <ul class="card-list">
                     <li class="memory-card">
@@ -197,6 +197,20 @@
             // Add event listeners for mouse click and release
             myCanvas.addEventListener("mousedown", changeCursorToCustomImage)
             myCanvas.addEventListener("mouseup", revertCursorToPrevious)
+
+            // register service worker
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker
+                        .register("dist/service-worker.js")
+                        .then((registration) => {
+                            console.log("SW registered: ", registration)
+                        })
+                        .catch((registrationError) => {
+                            console.log("SW registration failed: ", registrationError)
+                        })
+                })
+            }
         </script>
     </body>
 </html>
