@@ -43,6 +43,35 @@ body::-webkit-scrollbar-track {
     gap: 5px;
 }
 
+.btn_restart {
+    display: none;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(68, 68, 68, 0.8);
+    border-radius: 20px;
+    cursor: pointer;
+    position: absolute;
+    z-index: 10;
+    top: 60%;
+    left: 50%;
+    translate: -50% -50%;
+    box-shadow:
+        0 3px 6px 0 rgba(0, 0, 0, 0.1),
+        0 4px 18px 0 rgba(0, 0, 0, 0.19);
+    transition: all 0.2s ease-in-out;
+}
+
+.btn_restart img {
+    width: 100%;
+    height: 100%;
+}
+.btn_restart:hover {
+    background-color: rgba(34, 34, 34, 0.5);
+    box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.3),
+        0 6px 20px 0 rgba(0, 0, 0, 0.29);
+}
+
 .btn {
     height: 35px;
     background-color: rgba(34, 34, 34, 0.5);
@@ -54,6 +83,7 @@ body::-webkit-scrollbar-track {
     box-shadow:
         0 4px 8px 0 rgba(0, 0, 0, 0.3),
         0 6px 20px 0 rgba(0, 0, 0, 0.29);
+    transition: all 0.3s ease-in-out;
 }
 .btn:hover {
     background-color: rgba(68, 68, 68, 0.8);

@@ -611,6 +611,14 @@ window.addEventListener("load", () => {
     Composite.add(world, [constraintLeft, constraintRight, sign])
 
     /** UTILS **/
+
+    const btnRestart = document.getElementById("btn-restart")
+
+    if (btnRestart) {
+        btnRestart.addEventListener("click", () => {
+            window.location.reload()
+        })
+    }
     /**
      * Draw game status on canvas
      */
@@ -625,6 +633,8 @@ window.addEventListener("load", () => {
             ctx.fillStyle = "#f4f4f4"
             ctx.fillText(`GAME OVER`, fromX, CH / 2)
             ctx.restore()
+
+            btnRestart.style.display = "block"
         } else {
             // update score ui
             // get sign body
