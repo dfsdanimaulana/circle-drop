@@ -1,3 +1,6 @@
+// Copyright (c) [2023] [dnm17_]
+// This software is licensed under the MIT License. See LICENSE.txt for details.
+
 import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 import { getAuth } from "firebase/auth"

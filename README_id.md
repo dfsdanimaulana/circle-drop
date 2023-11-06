@@ -26,7 +26,7 @@ Jika Anda tertarik untuk berkontribusi pada pengembangan game ini, Anda dapat me
 
 ## Lisensi
 
-Game ini dirilis di bawah [Lisensi MIT](LICENSE).
+Game ini dirilis di bawah [Lisensi MIT](LICENSE.md).
 
 ## Pengembang
 

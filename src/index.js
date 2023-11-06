@@ -1,3 +1,6 @@
+// Copyright (c) [2023] [dnm17_]
+// This software is licensed under the MIT License. See LICENSE.txt for details.
+
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import Matter from "matter-js"

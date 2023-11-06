@@ -26,7 +26,7 @@ If you're interested in contributing to the development of this game, you can fo
 
 ## License
 
-This game is released under the [MIT License](LICENSE).
+This game is released under the [MIT License](LICENSE.md).
 
 ## Developer
 

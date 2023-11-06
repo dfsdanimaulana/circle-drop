@@ -1,7 +1,17 @@
 {
     "version": "1.0.0",
-    "description": "My webpack project",
-    "name": "my-webpack-project",
+    "description": "Circle Drop 2D Web Game Created with Matter JS by @dnm17_",
+    "name": "circle-drop",
+    "author": {
+        "name": "dnm17",
+        "url": "https://github.com/dfsdanimaulana"
+    },
+    "homepage": "https://circle-drop.netlify.com",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dfsdanimaulana/circle-drop.git"
+    },
+    "license": "MIT",
     "scripts": {
         "build": "webpack --mode=production --node-env=production",
         "build:dev": "webpack --mode=development --watch",
