@@ -248,7 +248,7 @@ window.addEventListener("load", () => {
         },
     ]
 
-    const qs = query(scoresColRef, orderBy("score", "desc"), orderBy("created_at", "desc"))
+    const qs = query(scoresColRef, orderBy("score", "desc"))
     onSnapshot(
         qs,
         (snapshot) => {
