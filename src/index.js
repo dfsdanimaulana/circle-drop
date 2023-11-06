@@ -46,8 +46,8 @@ function handleAuthError(error) {
     if (error.code === "auth/account-exists-with-different-credential") {
         showErrorToast("The email address is already in use with different sign-in credentials.")
     } else {
-        showErrorToast(error.message)
         console.log(error.message)
+        showErrorToast(error.message)
     }
 }
 // handle signup user with gmail
@@ -111,8 +111,9 @@ onAuthStateChanged(
             userNotExists()
         }
     },
-    (err) => {
-        console.log(err)
+    (error) => {
+        console.log(error)
+        showErrorToast(error.message)
     },
 )
 
@@ -155,20 +156,20 @@ async function updateUserScore(gameScore) {
             }
         } catch (error) {
             console.log(error)
+            showErrorToast(error.message)
         }
     }
 }
+
+const scoresColRef = collection(db, "scores")
 
 async function createUserData(user) {
     try {
         // Define the "uid" value you want to search for
         const targetUid = user.uid
 
-        // Reference the collection you want to query
-        const collectionRef = collection(db, "scores")
-
         // Create a query to find documents with the specified "uid"
-        const q = query(collectionRef, where("uid", "==", targetUid))
+        const q = query(scoresColRef, where("uid", "==", targetUid))
 
         const querySnapshot = await getDocs(q)
         if (querySnapshot.empty) {
@@ -181,11 +182,12 @@ async function createUserData(user) {
                 score: 0,
                 created_at: serverTimestamp(),
             }
-            await addDoc(colRef, data)
+            await addDoc(scoresColRef, data)
         }
         window.location.reload()
-    } catch (err) {
-        console.log(err)
+    } catch (error) {
+        console.log(error)
+        showErrorToast(error.message)
     }
 }
 
@@ -218,8 +220,6 @@ window.addEventListener("load", () => {
     const leaderboardList = document.querySelector("#leaderboard-list")
 
     // handle leaderboard content
-    const colsRef = collection(db, "scores")
-
     const badges = [
         {
             name: "🌎 Inti Bumi",
@@ -248,7 +248,7 @@ window.addEventListener("load", () => {
         },
     ]
 
-    const qs = query(colsRef, orderBy("score", "desc"), orderBy("created_at", "desc"))
+    const qs = query(scoresColRef, orderBy("score", "desc"), orderBy("created_at", "desc"))
     onSnapshot(
         qs,
         (snapshot) => {
@@ -305,6 +305,7 @@ window.addEventListener("load", () => {
         },
         (error) => {
             console.log(error)
+            showErrorToast(error.message)
         },
     )
 
