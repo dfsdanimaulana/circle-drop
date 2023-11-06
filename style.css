@@ -116,7 +116,7 @@ body::-webkit-scrollbar-track {
     display: none;
     flex-direction: column;
     justify-content: center;
-    padding: 10px;
+    padding: 15px;
     max-width: max-content;
     min-width: 170px;
     font-weight: 400;
@@ -126,14 +126,27 @@ body::-webkit-scrollbar-track {
     align-items: center;
     gap: 10px;
     border-bottom: 2px solid #a0a0a0;
-    padding-bottom: 10px;
+    padding-bottom: 15px;
 }
 .profile_name img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
 }
-
+.profile_name div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.profile_badge {
+    color: white;
+    background-color: red;
+    font-size: xx-small;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 0 5px;
+    max-width: fit-content;
+}
 .profile_score {
     display: flex;
     align-items: center;

@@ -215,7 +215,7 @@ window.addEventListener("load", () => {
     // walls wallThickness
     const wallThickness = 20
     // floor thickness
-    const floorThickness = 100
+    const floorThickness = 150
     // radius of texture image = image size/2
     const textureImageRadius = 75
     // texture images count
