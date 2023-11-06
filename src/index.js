@@ -11,6 +11,45 @@ import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, where, 
 
 import { auth, db } from "./firebase.js"
 
+// custom toast
+function showSuccessToast(message) {
+    Toastify({
+        text: message,
+        duration: 3000,
+        close: true,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        },
+        onClick: function () {}, // Callback after click
+    }).showToast()
+}
+function showErrorToast(message) {
+    Toastify({
+        text: message,
+        duration: 5000,
+        close: true,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+            background: "linear-gradient(to right, #b01200, #c93d3d)",
+        },
+        onClick: function () {}, // Callback after click
+    }).showToast()
+}
+
+function handleAuthError(error) {
+    // Handle any errors that occurred during the sign-up process
+    if (error.code === "auth/account-exists-with-different-credential") {
+        showErrorToast("The email address is already in use with different sign-in credentials.")
+    } else {
+        showErrorToast(error.message)
+        console.log(error.message)
+    }
+}
 // handle signup user with gmail
 const signInGoogle = async () => {
     const provider = new GoogleAuthProvider()
@@ -21,8 +60,7 @@ const signInGoogle = async () => {
 
         createUserData(user)
     } catch (error) {
-        // Handle any errors that occurred during the sign-up process
-        console.log(error)
+        handleAuthError(error)
     }
 }
 const signInGithub = async () => {
@@ -34,8 +72,7 @@ const signInGithub = async () => {
 
         createUserData(user)
     } catch (error) {
-        // Handle any errors that occurred during the sign-up process
-        console.log(error)
+        handleAuthError(error)
     }
 }
 
@@ -62,6 +99,7 @@ onAuthStateChanged(
     (user) => {
         if (user) {
             currentUser = user
+            showSuccessToast(`Welcome ${user.displayName}`)
             userExists()
         } else {
             currentUser = null
@@ -80,9 +118,11 @@ githubButton.addEventListener("click", () => {
     signInGithub()
 })
 signOutButton.addEventListener("click", () => {
+    if (!currentUser) return
     signOut(auth)
     currentUser = null
     userDocs = null
+    showSuccessToast("Sign out successful")
 })
 
 function userExists() {
@@ -121,7 +161,7 @@ async function updateUserScore(gameScore) {
                 await updateDoc(doc(db, "scores", userDocs.id), {
                     score: gameScore,
                 })
-                console.log("User score updated")
+                showSuccessToast("You have new high score")
             }
         } catch (error) {
             console.log(error)
@@ -150,9 +190,7 @@ async function createUserData(user) {
                 score: 0,
                 rank: 0,
             }
-
-            const res = await addDoc(colRef, data)
-            console.log("User data created", res)
+            await addDoc(colRef, data)
         }
         window.location.reload()
     } catch (err) {
