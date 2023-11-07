@@ -3,13 +3,13 @@
 
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import Matter from "matter-js"
-import { Howl } from "howler"
+import Matter from 'matter-js'
+import { Howl } from 'howler'
 
-import { onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth"
-import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, where, getDocs, serverTimestamp } from "firebase/firestore"
+import { onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth'
+import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, where, getDocs, serverTimestamp } from 'firebase/firestore'
 
-import { auth, db } from "./firebase.js"
+import { auth, db } from './firebase.js'
 
 // custom toast
 function showSuccessToast(message) {
@@ -17,13 +17,13 @@ function showSuccessToast(message) {
         text: message,
         duration: 3000,
         close: true,
-        gravity: "bottom", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
+        gravity: 'bottom', // `top` or `bottom`
+        position: 'right', // `left`, `center` or `right`
         stopOnFocus: true, // Prevents dismissing of toast on hover
         style: {
-            background: "linear-gradient(to right, #00b09b, #96c93d)",
+            background: 'linear-gradient(to right, #00b09b, #96c93d)'
         },
-        onClick: function () {}, // Callback after click
+        onClick: function () {} // Callback after click
     }).showToast()
 }
 function showErrorToast(message) {
@@ -31,20 +31,20 @@ function showErrorToast(message) {
         text: message,
         duration: 5000,
         close: true,
-        gravity: "bottom", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
+        gravity: 'bottom', // `top` or `bottom`
+        position: 'right', // `left`, `center` or `right`
         stopOnFocus: true, // Prevents dismissing of toast on hover
         style: {
-            background: "linear-gradient(to right, #b01200, #c93d3d)",
+            background: 'linear-gradient(to right, #b01200, #c93d3d)'
         },
-        onClick: function () {}, // Callback after click
+        onClick: function () {} // Callback after click
     }).showToast()
 }
 
 function handleAuthError(error) {
     // Handle any errors that occurred during the sign-up process
-    if (error.code === "auth/account-exists-with-different-credential") {
-        showErrorToast("The email address is already in use with different sign-in credentials.")
+    if (error.code === 'auth/account-exists-with-different-credential') {
+        showErrorToast('The email address is already in use with different sign-in credentials.')
     } else {
         console.log(error.message)
         showErrorToast(error.message)
@@ -76,16 +76,16 @@ const signInGithub = async () => {
     }
 }
 
-const googleButton = document.querySelector("#sign-in-google")
-const githubButton = document.querySelector("#sign-in-github")
-const signOutButton = document.querySelector("#sign-out")
+const googleButton = document.querySelector('#sign-in-google')
+const githubButton = document.querySelector('#sign-in-github')
+const signOutButton = document.querySelector('#sign-out')
 
-const profileCard = document.querySelector(".profile")
-const profileName = document.querySelector("#profile-name")
-const profileScore = document.querySelector("#profile-score")
-const profileImage = document.querySelector("#profile-image")
-const profileBadge = document.querySelector("#profile-badge")
-const profileRank = document.querySelector("#profile-rank")
+const profileCard = document.querySelector('.profile')
+const profileName = document.querySelector('#profile-name')
+const profileScore = document.querySelector('#profile-score')
+const profileImage = document.querySelector('#profile-image')
+const profileBadge = document.querySelector('#profile-badge')
+const profileRank = document.querySelector('#profile-rank')
 
 function setProfile(data) {
     profileName.textContent = data.displayName
@@ -114,45 +114,45 @@ onAuthStateChanged(
     (error) => {
         console.log(error)
         showErrorToast(error.message)
-    },
+    }
 )
 
-googleButton.addEventListener("click", () => {
+googleButton.addEventListener('click', () => {
     signInGoogle()
 })
-githubButton.addEventListener("click", () => {
+githubButton.addEventListener('click', () => {
     signInGithub()
 })
-signOutButton.addEventListener("click", () => {
+signOutButton.addEventListener('click', () => {
     if (!currentUser) return
     signOut(auth)
     currentUser = null
     userDocs = null
-    showSuccessToast("Sign out successful")
+    showSuccessToast('Sign out successful')
 })
 
 function userExists() {
-    googleButton.style.display = "none"
-    githubButton.style.display = "none"
-    signOutButton.style.display = "flex"
-    profileCard.style.display = "flex"
+    googleButton.style.display = 'none'
+    githubButton.style.display = 'none'
+    signOutButton.style.display = 'flex'
+    profileCard.style.display = 'flex'
 }
 
 function userNotExists() {
-    googleButton.style.display = "flex"
-    githubButton.style.display = "flex"
-    signOutButton.style.display = "none"
-    profileCard.style.display = "none"
+    googleButton.style.display = 'flex'
+    githubButton.style.display = 'flex'
+    signOutButton.style.display = 'none'
+    profileCard.style.display = 'none'
 }
 
 async function updateUserScore(gameScore) {
     if (currentUser && userDocs) {
         try {
             if (gameScore > userDocs.score) {
-                await updateDoc(doc(db, "scores", userDocs.id), {
-                    score: gameScore,
+                await updateDoc(doc(db, 'scores', userDocs.id), {
+                    score: gameScore
                 })
-                showSuccessToast("You have new high score")
+                showSuccessToast('You have new high score')
             }
         } catch (error) {
             console.log(error)
@@ -161,7 +161,7 @@ async function updateUserScore(gameScore) {
     }
 }
 
-const scoresColRef = collection(db, "scores")
+const scoresColRef = collection(db, 'scores')
 
 async function createUserData(user) {
     try {
@@ -169,7 +169,7 @@ async function createUserData(user) {
         const targetUid = user.uid
 
         // Create a query to find documents with the specified "uid"
-        const q = query(scoresColRef, where("uid", "==", targetUid))
+        const q = query(scoresColRef, where('uid', '==', targetUid))
 
         const querySnapshot = await getDocs(q)
         if (querySnapshot.empty) {
@@ -180,7 +180,7 @@ async function createUserData(user) {
                 photoURL: user.photoURL,
                 provider: user.providerData[0].providerId,
                 score: 0,
-                created_at: serverTimestamp(),
+                created_at: serverTimestamp()
             }
             await addDoc(scoresColRef, data)
         }
@@ -191,7 +191,7 @@ async function createUserData(user) {
     }
 }
 
-window.addEventListener("load", () => {
+window.addEventListener('load', () => {
     // listen to auth user
 
     // module aliases
@@ -199,71 +199,71 @@ window.addEventListener("load", () => {
 
     // check if viewport is mobile or not
     const maxDesktopWidth = 430
-    const maxCanvasHeight = 697
+    const maxCanvasHeight = 820
     const isMobile = window.innerWidth <= 768
 
     const canvasWidth = isMobile ? window.innerWidth : maxDesktopWidth
     const canvasHeight = window.innerHeight > maxCanvasHeight ? maxCanvasHeight : window.innerHeight
 
-    const canvas = document.getElementById("myCanvas"),
+    const canvas = document.getElementById('myCanvas'),
         CW = (canvas.width = canvasWidth),
         CH = (canvas.height = canvasHeight)
 
     // show or hide after load
-    document.querySelector(".btn-container").style.display = "flex"
-    document.querySelector("#loading").style.display = "none"
-    canvas.style.display = "block"
+    document.querySelector('.btn-container').style.display = 'flex'
+    document.querySelector('#loading').style.display = 'none'
+    canvas.style.display = 'block'
     if (!isMobile) {
-        document.querySelector(".card-wrapper").style.display = "block"
-        document.querySelector(".leaderboard-container").style.display = "flex"
+        document.querySelector('.card-wrapper').style.display = 'block'
+        document.querySelector('.leaderboard-container').style.display = 'flex'
     }
 
-    const leaderboardList = document.querySelector("#leaderboard-list")
+    const leaderboardList = document.querySelector('#leaderboard-list')
 
     // handle leaderboard content
     const badges = [
         {
-            name: "🌎 Inti Bumi",
-            className: "badge-inti-bumi",
-            rankColor: "rgba(251, 255, 0, 0.7)",
+            name: '🌎 Inti Bumi',
+            className: 'badge-inti-bumi',
+            rankColor: 'rgba(251, 255, 0, 0.7)'
         },
         {
-            name: "👑 Sepuh",
-            className: "badge-sepuh",
-            rankColor: "#C0C0C0",
+            name: '👑 Sepuh',
+            className: 'badge-sepuh',
+            rankColor: '#C0C0C0'
         },
         {
-            name: "👨‍🎓 Senior 1",
-            className: "badge-senior",
-            rankColor: "#CD7F32",
+            name: '👨‍🎓 Senior 1',
+            className: 'badge-senior',
+            rankColor: '#CD7F32'
         },
         {
-            name: "👨‍🎓 Senior 2",
-            className: "badge-senior",
-            rankColor: "#CD7F32",
+            name: '👨‍🎓 Senior 2',
+            className: 'badge-senior',
+            rankColor: '#CD7F32'
         },
         {
-            name: "👨‍💼 Junior 1",
-            className: "badge-junior",
-            rankColor: "#036cc2",
+            name: '👨‍💼 Junior 1',
+            className: 'badge-junior',
+            rankColor: '#036cc2'
         },
         {
-            name: "👨‍💼 Junior 2",
-            className: "badge-junior",
-            rankColor: "#036cc2",
+            name: '👨‍💼 Junior 2',
+            className: 'badge-junior',
+            rankColor: '#036cc2'
         },
         {
-            name: "👶 Pemula",
-            className: "badge-pemula",
-            rankColor: "#00b09b",
-        },
+            name: '👶 Pemula',
+            className: 'badge-pemula',
+            rankColor: '#00b09b'
+        }
     ]
 
-    const qs = query(scoresColRef, orderBy("score", "desc"), orderBy("created_at", "asc"))
+    const qs = query(scoresColRef, orderBy('score', 'desc'), orderBy('created_at', 'asc'))
     onSnapshot(
         qs,
         (snapshot) => {
-            leaderboardList.innerHTML = ""
+            leaderboardList.innerHTML = ''
             snapshot.docs.forEach((doc, index) => {
                 const data = { ...doc.data(), id: doc.id }
                 const rank = index + 1
@@ -275,7 +275,7 @@ window.addEventListener("load", () => {
 
                 const score = data.score.toString()
                 if (score.length < 3) {
-                    data.score = "0".repeat(3 - score.length) + score
+                    data.score = '0'.repeat(3 - score.length) + score
                 }
 
                 data.rank = rank
@@ -313,26 +313,26 @@ window.addEventListener("load", () => {
         (error) => {
             console.log(error)
             showErrorToast(error.message)
-        },
+        }
     )
 
     // list of particles
     const particles = [
-        "src/particles/particles.json",
-        "src/particles/particles-bubble.json",
-        "src/particles/particles-nasa.json",
-        "src/particles/particles-snow.json",
+        'src/particles/particles.json',
+        'src/particles/particles-bubble.json',
+        'src/particles/particles-nasa.json',
+        'src/particles/particles-snow.json'
     ]
 
     if (!isMobile) {
         // load particles
-        particlesJS.load("particles-js", getRandom(particles), function () {
-            console.log("particles.js loaded - callback")
+        particlesJS.load('particles-js', getRandom(particles), function () {
+            console.log('particles.js loaded - callback')
         })
     }
 
     // background fill color
-    const backgroundColor = "#2e2e2e"
+    const backgroundColor = '#2e2e2e'
     // top circle initial position
     const positionY = 60
     // scale between category
@@ -340,9 +340,9 @@ window.addEventListener("load", () => {
     // initial radius of first circle
     const initialValue = 20
     // walls fill color
-    const wallsColor = "#1c1c1c"
+    const wallsColor = '#1c1c1c'
     // sign fill color
-    const signColor = "#986129"
+    const signColor = '#986129'
     // walls wallThickness
     const wallThickness = 20
     // floor thickness
@@ -362,37 +362,37 @@ window.addEventListener("load", () => {
     // list of sfx
     const sfx = {
         merge: new Howl({
-            src: ["assets/audio/merge.wav"],
+            src: ['assets/audio/merge.wav']
         }),
         gameOver: new Howl({
-            src: ["assets/audio/game_over.mp3"],
+            src: ['assets/audio/game_over.mp3']
         }),
         hit: new Howl({
-            src: ["assets/audio/hit.wav"],
-        }),
+            src: ['assets/audio/hit.wav']
+        })
     }
 
     // list of BGM
     const music = {
         bgm: new Howl({
-            src: ["assets/audio/bgm/enjoy.mp3"],
-            loop: true,
-        }),
+            src: ['assets/audio/bgm/enjoy.mp3'],
+            loop: true
+        })
     }
 
     music.bgm.play()
 
-    const btnPlay = document.querySelector("#btn-music-play")
-    const btnStop = document.querySelector("#btn-music-stop")
+    const btnPlay = document.querySelector('#btn-music-play')
+    const btnStop = document.querySelector('#btn-music-stop')
 
-    btnPlay.style.display = "none"
-    btnStop.style.display = "block"
+    btnPlay.style.display = 'none'
+    btnStop.style.display = 'block'
 
     // function to play BGM
     function playMusic() {
         if (!music.bgm.playing()) {
-            btnPlay.style.display = "none"
-            btnStop.style.display = "block"
+            btnPlay.style.display = 'none'
+            btnStop.style.display = 'block'
             music.bgm.play()
         }
     }
@@ -400,8 +400,8 @@ window.addEventListener("load", () => {
     // function to stop BGM
     function stopMusic() {
         if (music.bgm.playing()) {
-            btnPlay.style.display = "block"
-            btnStop.style.display = "none"
+            btnPlay.style.display = 'block'
+            btnStop.style.display = 'none'
             music.bgm.stop()
         }
     }
@@ -432,8 +432,8 @@ window.addEventListener("load", () => {
             wireframes: false,
             showCollisions: false,
             showDebug: false,
-            showPositions: false,
-        },
+            showPositions: false
+        }
     })
     // canvas 2D context
     const ctx = render.context
@@ -450,9 +450,9 @@ window.addEventListener("load", () => {
             constraint: {
                 stiffness: 0.2,
                 render: {
-                    visible: false,
-                },
-            },
+                    visible: false
+                }
+            }
         })
     // add mouse to world
     Composite.add(world, mouseConstraint)
@@ -461,7 +461,7 @@ window.addEventListener("load", () => {
     // fit the render viewport to the scene
     Render.lookAt(render, {
         min: { x: 0, y: 0 },
-        max: { x: CW, y: CH },
+        max: { x: CW, y: CH }
     })
 
     // define our categories (as bit fields, there are up to 32 available) to prevent mouse for moving the circle
@@ -489,7 +489,7 @@ window.addEventListener("load", () => {
             size: sizes[i],
             category: i,
             texture: textures[i],
-            textureScale: sizes[i] / textureImageRadius,
+            textureScale: sizes[i] / textureImageRadius
         })
     }
 
@@ -505,7 +505,7 @@ window.addEventListener("load", () => {
     const endCanvasPosition = startCanvasPosition + CW
 
     // set circle position back to center when mouse outside the canvas
-    window.addEventListener("mousemove", (e) => {
+    window.addEventListener('mousemove', (e) => {
         if (!allowNextCircle) return
 
         // get all circle body
@@ -519,13 +519,13 @@ window.addEventListener("load", () => {
             // update latest circle position here
             Body.setPosition(circles[circles.length - 1], {
                 x: CW / 2,
-                y: positionY,
+                y: positionY
             })
         }
     })
 
     // listen to mouse movement and update static circle position
-    Events.on(mouseConstraint, "mousemove", (event) => {
+    Events.on(mouseConstraint, 'mousemove', (event) => {
         if (!allowNextCircle) return
         // get all circle body
         const circles = getBodies()
@@ -538,19 +538,19 @@ window.addEventListener("load", () => {
             // update latest circle position here
             Body.setPosition(circles[circles.length - 1], {
                 x: CW / 2,
-                y: positionY,
+                y: positionY
             })
         }
 
         // update latest circle position here
         Body.setPosition(circles[circles.length - 1], {
             x: mouseX,
-            y: positionY,
+            y: positionY
         })
     })
 
     // listen to mouse left click and set circle static to false
-    Events.on(mouseConstraint, "mouseup", (event) => {
+    Events.on(mouseConstraint, 'mouseup', (event) => {
         if (allowNextCircle) {
             allowNextCircle = false
             // get all circle body
@@ -567,20 +567,20 @@ window.addEventListener("load", () => {
         }
     })
     // handle collision between circle and floor
-    Events.on(engine, "collisionStart", (event) => {
+    Events.on(engine, 'collisionStart', (event) => {
         const pairs = event.pairs
 
         for (let i = 0; i < pairs.length; i++) {
             const bodyA = pairs[i].bodyA
             const bodyB = pairs[i].bodyB
-            if ((bodyA.label === "Circle Body" && bodyB.label === "Floor") || (bodyB.label === "Circle Body" && bodyA.label === "Floor")) {
+            if ((bodyA.label === 'Circle Body' && bodyB.label === 'Floor') || (bodyB.label === 'Circle Body' && bodyA.label === 'Floor')) {
                 sfx.hit.play()
             }
         }
     })
 
     // handle collision between two circle
-    Events.on(engine, "collisionActive", (event) => {
+    Events.on(engine, 'collisionActive', (event) => {
         // pairs of active collision between two circle => []
         const pairs = event.source.pairs.list
 
@@ -606,13 +606,13 @@ window.addEventListener("load", () => {
                 // update circleB category
                 const newCategory = prevCategory < textures.length ? categories[prevCategory + 1] : prevCategory
                 // update depends on previous circleB category
-                Body.set(circleB, "category", newCategory.category)
+                Body.set(circleB, 'category', newCategory.category)
                 // update body texture
-                Body.set(circleB.render.sprite, "texture", newCategory.texture)
+                Body.set(circleB.render.sprite, 'texture', newCategory.texture)
                 // update body texture scale X
-                Body.set(circleB.render.sprite, "xScale", newCategory.textureScale)
+                Body.set(circleB.render.sprite, 'xScale', newCategory.textureScale)
                 // update body texture scale Y
-                Body.set(circleB.render.sprite, "yScale", newCategory.textureScale)
+                Body.set(circleB.render.sprite, 'yScale', newCategory.textureScale)
                 // update circleB radius
                 Body.scale(circleB, scale, scale)
             }
@@ -620,7 +620,7 @@ window.addEventListener("load", () => {
     })
 
     // an example of using beforeUpdate event on an engine
-    Events.on(engine, "beforeUpdate", function (event) {
+    Events.on(engine, 'beforeUpdate', function (event) {
         // draw game score
         drawGameStatus()
         // get all bodies in world
@@ -652,18 +652,18 @@ window.addEventListener("load", () => {
     // create walls
     const wallOptions = {
         isStatic: true,
-        label: "Wall",
+        label: 'Wall',
         render: {
-            fillStyle: wallsColor,
-        },
+            fillStyle: wallsColor
+        }
     }
     const topWall = Bodies.rectangle(CW / 2, 0, CW, wallThickness, wallOptions)
     const bottomWall = Bodies.rectangle(CW / 2, CH, CW, floorThickness, {
         isStatic: true,
-        label: "Floor",
+        label: 'Floor',
         render: {
-            fillStyle: wallsColor,
-        },
+            fillStyle: wallsColor
+        }
     })
     const leftWall = Bodies.rectangle(0, CH / 2, wallThickness, CH, wallOptions)
     const rightWall = Bodies.rectangle(CW, CH / 2, wallThickness, CH, wallOptions)
@@ -671,17 +671,17 @@ window.addEventListener("load", () => {
 
     // create hanging sign
     const sign = Bodies.rectangle(50, 50, 100, 30, {
-        label: "Sign",
+        label: 'Sign',
         render: {
-            fillStyle: signColor,
+            fillStyle: signColor
         },
         chamfer: {
-            radius: 3,
-        },
+            radius: 3
+        }
     })
     const constraintRender = {
-        strokeStyle: "#9b9b9b",
-        lineWidth: 1.5,
+        strokeStyle: '#9b9b9b',
+        lineWidth: 1.5
     }
     const constraintLength = 10
     const constraintLeft = Constraint.create({
@@ -690,7 +690,7 @@ window.addEventListener("load", () => {
         bodyB: sign,
         pointB: { x: -40, y: -15 },
         render: constraintRender,
-        length: constraintLength,
+        length: constraintLength
     })
     const constraintRight = Constraint.create({
         bodyA: topWall,
@@ -698,17 +698,17 @@ window.addEventListener("load", () => {
         bodyB: sign,
         pointB: { x: 40, y: -15 },
         render: constraintRender,
-        length: constraintLength,
+        length: constraintLength
     })
 
     Composite.add(world, [constraintLeft, constraintRight, sign])
 
     /** UTILS **/
 
-    const btnRestart = document.getElementById("btn-restart")
+    const btnRestart = document.getElementById('btn-restart')
 
     if (btnRestart) {
-        btnRestart.addEventListener("click", () => {
+        btnRestart.addEventListener('click', () => {
             window.location.reload()
         })
     }
@@ -720,18 +720,18 @@ window.addEventListener("load", () => {
             // draw game over message
             ctx.save()
             const fromX = CW / 2 - 145
-            ctx.font = "bold 50px Arial"
-            ctx.fillStyle = "#191919"
+            ctx.font = 'bold 50px Arial'
+            ctx.fillStyle = '#191919'
             ctx.fillText(`GAME OVER`, fromX + 3, CH / 2 + 3)
-            ctx.fillStyle = "#f4f4f4"
+            ctx.fillStyle = '#f4f4f4'
             ctx.fillText(`GAME OVER`, fromX, CH / 2)
             ctx.restore()
 
-            btnRestart.style.display = "block"
+            btnRestart.style.display = 'block'
         } else {
             // update score ui
             // get sign body
-            const signBody = Composite.allBodies(world).filter((body) => body.label === "Sign")[0]
+            const signBody = Composite.allBodies(world).filter((body) => body.label === 'Sign')[0]
             const signX = signBody.position.x
             const signY = signBody.position.y
 
@@ -739,10 +739,10 @@ window.addEventListener("load", () => {
             // draw game score
             ctx.translate(signX, signY)
             ctx.rotate(signBody.angle)
-            ctx.font = "bold 15px Arial"
-            ctx.fillStyle = "#070707"
+            ctx.font = 'bold 15px Arial'
+            ctx.fillStyle = '#070707'
             ctx.fillText(`SCORE: ${gameScore.toString()}`, -38, 7)
-            ctx.fillStyle = "#e9e9e9"
+            ctx.fillStyle = '#e9e9e9'
             ctx.fillText(`SCORE: ${gameScore.toString()}`, -40, 5)
             ctx.restore()
         }
@@ -774,7 +774,7 @@ window.addEventListener("load", () => {
      * @return Body[]
      */
     function getBodies() {
-        return Composite.allBodies(world).filter((body) => body.label === "Circle Body")
+        return Composite.allBodies(world).filter((body) => body.label === 'Circle Body')
     }
 
     /**
@@ -788,15 +788,15 @@ window.addEventListener("load", () => {
             restitution: 0.5, // bounce level
             category: category.category,
             collisionFilter: {
-                mask: defaultCategory | redCategory,
+                mask: defaultCategory | redCategory
             },
             render: {
                 sprite: {
                     texture: category.texture,
                     xScale: category.textureScale,
-                    yScale: category.textureScale,
-                },
-            },
+                    yScale: category.textureScale
+                }
+            }
         }
         const circle = Bodies.circle(CW / 2, positionY, category.size, options)
         Composite.add(world, circle)
@@ -810,8 +810,8 @@ window.addEventListener("load", () => {
         return (
             circleA.category === circleB.category &&
             circleA.circleRadius === circleB.circleRadius &&
-            circleA.label === "Circle Body" &&
-            circleB.label === "Circle Body" &&
+            circleA.label === 'Circle Body' &&
+            circleB.label === 'Circle Body' &&
             !circleA.isStatic &&
             !circleB.isStatic
         )
