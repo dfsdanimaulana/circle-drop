@@ -232,12 +232,22 @@ window.addEventListener("load", () => {
             rankColor: "#C0C0C0",
         },
         {
-            name: "👨‍🎓 Senior",
+            name: "👨‍🎓 Senior 1",
             className: "badge-senior",
             rankColor: "#CD7F32",
         },
         {
-            name: "👨‍💼 Junior",
+            name: "👨‍🎓 Senior 2",
+            className: "badge-senior",
+            rankColor: "#CD7F32",
+        },
+        {
+            name: "👨‍💼 Junior 1",
+            className: "badge-junior",
+            rankColor: "#036cc2",
+        },
+        {
+            name: "👨‍💼 Junior 2",
             className: "badge-junior",
             rankColor: "#036cc2",
         },
@@ -256,10 +266,8 @@ window.addEventListener("load", () => {
             snapshot.docs.forEach((doc, index) => {
                 const data = { ...doc.data(), id: doc.id }
 
-                if (index >= 0 && index <= 2) {
+                if (index >= 0 && index <= 6) {
                     data.badge = badges[index]
-                } else if (index >= 3 && index <= 9) {
-                    data.badge = badges[3]
                 } else {
                     data.badge = badges[4]
                 }

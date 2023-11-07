@@ -193,8 +193,14 @@ body::-webkit-scrollbar-track {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    overflow: hidden; /* Hide overflowing text */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Display an ellipsis (...) for overflow */
 }
 .leaderboard-name span:first-child {
+    overflow: hidden; /* Hide overflowing text */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Display an ellipsis (...) for overflow */
     color: white;
     font-weight: 500;
 }
@@ -241,6 +247,10 @@ body::-webkit-scrollbar-track {
     gap: 10px;
     border-bottom: 2px solid #a0a0a0;
     padding-bottom: 15px;
+    width: 200px;
+    overflow: hidden; /* Hide overflowing text */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Display an ellipsis (...) for overflow */
 }
 .profile_name img {
     width: 40px;
