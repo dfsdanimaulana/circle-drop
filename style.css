@@ -17,7 +17,9 @@ body::-webkit-scrollbar-thumb {
 body::-webkit-scrollbar-track {
     background: transparent;
 }
-
+.particles-container {
+    height: 100vh;
+}
 #myCanvas {
     cursor: url("assets/image/cursor.png"), auto;
     display: none;
@@ -137,31 +139,44 @@ body::-webkit-scrollbar-track {
     width: 380px;
     border: 3px solid #a0a0a0;
     border-radius: 10px;
-    min-height: 80%;
+    /* min-height: 80%; */
     flex-direction: column;
     align-items: center;
     background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(49, 49, 49, 0.7));
-    /* box-shadow:
+    box-shadow:
         0 4px 8px 0 rgba(0, 0, 0, 0.3),
-        0 6px 20px 0 rgba(0, 0, 0, 0.29); */
+        0 6px 20px 0 rgba(0, 0, 0, 0.29);
+    height: 75%;
 }
 
 .leaderboard-title {
-    /* border: 1px solid white; */
     margin: 10px;
     color: #c9c9c9;
 }
 .leaderboard-list {
+    overflow-y: auto;
     width: 100%;
-    /* border: 1px solid white; */
     flex: 1;
-    padding: 5px;
+    margin: 5px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
+/* Hide the scrollbar in Webkit-based browsers (Chrome, Safari) */
+.leaderboard-list::-webkit-scrollbar {
+    width: 0;
+}
+
+.leaderboard-list::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.leaderboard-list::-webkit-scrollbar-track {
+    background: transparent;
+}
 .leaderboard-item {
-    height: 45px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;

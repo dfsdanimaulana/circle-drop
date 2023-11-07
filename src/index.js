@@ -199,10 +199,11 @@ window.addEventListener("load", () => {
 
     // check if viewport is mobile or not
     const maxDesktopWidth = 430
+    const maxCanvasHeight = 697
     const isMobile = window.innerWidth <= 768
 
     const canvasWidth = isMobile ? window.innerWidth : maxDesktopWidth
-    const canvasHeight = window.innerHeight
+    const canvasHeight = window.innerHeight > maxCanvasHeight ? maxCanvasHeight : window.innerHeight
 
     const canvas = document.getElementById("myCanvas"),
         CW = (canvas.width = canvasWidth),
@@ -258,18 +259,18 @@ window.addEventListener("load", () => {
         },
     ]
 
-    const qs = query(scoresColRef, orderBy("score", "desc"))
+    const qs = query(scoresColRef, orderBy("score", "desc"), orderBy("created_at", "asc"))
     onSnapshot(
         qs,
         (snapshot) => {
             leaderboardList.innerHTML = ""
             snapshot.docs.forEach((doc, index) => {
                 const data = { ...doc.data(), id: doc.id }
-
-                if (index >= 0 && index <= 6) {
+                const rank = index + 1
+                if (rank >= 1 && rank <= 6) {
                     data.badge = badges[index]
                 } else {
-                    data.badge = badges[4]
+                    data.badge = badges[6]
                 }
 
                 const score = data.score.toString()
@@ -277,16 +278,14 @@ window.addEventListener("load", () => {
                     data.score = "0".repeat(3 - score.length) + score
                 }
 
-                data.rank = index + 1
+                data.rank = rank
 
                 const element = `<div class="leaderboard-item">
                     <div class="leaderboard-rank" >
-                        <span style="background-color: ${data.badge.rankColor};border-radius: 50%;" >${index + 1}</span>
+                        <span style="background-color: ${data.badge.rankColor};border-radius: 50%;" >${rank}</span>
                     </div>
 
-                    <img class="leaderboard-image" src="${
-                        data.photoURL
-                    }"  onerror="this.onerror=null; this.src='assets/image/icons/profile-default.svg';"/>
+                    <img class="leaderboard-image" src="${data.photoURL}"  onerror="this.onerror=null; this.src='assets/image/icons/profile-default.svg';"/>
 
                     <div class="leaderboard-name">
                         <span>${data.displayName}</span>
