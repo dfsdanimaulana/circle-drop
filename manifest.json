@@ -5,7 +5,7 @@
     "start_url": "/",
     "display": "standalone",
     "background_color": "#222222",
-    "theme_color": "#351c75",
+    "theme_color": "#2e2e2e",
     "icons": [
         {
             "src": "https://circle-drop.netlify.com/assets/image/icons/orbs-sm.png",
