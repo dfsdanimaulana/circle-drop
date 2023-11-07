@@ -96,6 +96,17 @@ function setProfile(data) {
     profileRank.textContent = data.rank
 }
 
+const tipsCard = document.querySelector("#tips-text")
+
+const tipsCardText = [
+    "Sign in to save your score and beat the leaderboard to get the <strong>Inti Bumi</strong> badge.",
+    "Complete the game to update your score",
+]
+
+function setTipsText(text) {
+    tipsCard.innerHTML = text || tipsCardText[Math.floor(Math.random() * tipsCardText.length)]
+}
+
 let currentUser = null
 let userDocs = null
 
@@ -106,9 +117,11 @@ onAuthStateChanged(
             currentUser = user
             showSuccessToast(`Welcome ${user.displayName}`)
             userExists()
+            setTipsText(tipsCardText[1])
         } else {
             currentUser = null
             userNotExists()
+            setTipsText(tipsCardText[0])
         }
     },
     (error) => {
@@ -152,7 +165,7 @@ async function updateUserScore(gameScore) {
                 await updateDoc(doc(db, "scores", userDocs.id), {
                     score: gameScore,
                 })
-                showSuccessToast("You have new high score")
+                showSuccessToast("You have new best score")
             }
         } catch (error) {
             console.log(error)
@@ -228,7 +241,7 @@ window.addEventListener("load", () => {
             rankColor: "rgba(251, 255, 0, 0.7)",
         },
         {
-            name: "👑 Sepuh",
+            name: "🤴 Sepuh",
             className: "badge-sepuh",
             rankColor: "#C0C0C0",
         },
