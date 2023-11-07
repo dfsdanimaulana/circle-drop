@@ -88,7 +88,7 @@ const profileBadge = document.querySelector("#profile-badge")
 const profileRank = document.querySelector("#profile-rank")
 
 function setProfile(data) {
-    profileName.textContent = data.displayName
+    // profileName.textContent = data.displayName
     profileScore.textContent = data.score
     profileImage.src = data.photoURL
     profileBadge.textContent = data.badge.name

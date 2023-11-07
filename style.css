@@ -234,11 +234,28 @@ body::-webkit-scrollbar-track {
     padding-right: 10px;
 }
 
-.card-wrapper {
-    display: none;
-    position: absolute;
-    top: 20px;
-    left: 20px;
+.tips-card {
+    /* From https://css.glass */
+    background: rgba(80, 80, 80, 0.17);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.4px);
+    -webkit-backdrop-filter: blur(6.4px);
+    border: 1px solid rgba(80, 80, 80, 0.17);
+
+    margin-top: 30px;
+    padding: 10px;
+    width: 230px;
+    max-height: 100px;
+}
+
+.tips-title {
+    color: #a0a0a0;
+    font-style: italic;
+}
+.tips-body {
+    font-size: 16px;
+    color: #c9c9c9;
 }
 .profile {
     margin-top: 30px;
@@ -252,8 +269,7 @@ body::-webkit-scrollbar-track {
     flex-direction: column;
     justify-content: center;
     padding: 15px;
-    max-width: max-content;
-    min-width: 170px;
+    width: 200px;
     font-weight: 400;
 }
 .profile_name {
@@ -262,7 +278,13 @@ body::-webkit-scrollbar-track {
     gap: 10px;
     border-bottom: 2px solid #a0a0a0;
     padding-bottom: 15px;
-    width: 200px;
+}
+.profile_name div {
+    overflow: hidden; /* Hide overflowing text */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Display an ellipsis (...) for overflow */
+}
+.profile_name div span:first-child {
     overflow: hidden; /* Hide overflowing text */
     white-space: nowrap; /* Prevent text from wrapping */
     text-overflow: ellipsis; /* Display an ellipsis (...) for overflow */
@@ -308,6 +330,12 @@ body::-webkit-scrollbar-track {
     padding-top: 10px;
     font-size: 0.8em;
     font-weight: 500;
+}
+.card-wrapper {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 20px;
 }
 .card {
     background-color: rgba(0, 0, 0, 0.3);
