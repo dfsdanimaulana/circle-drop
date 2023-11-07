@@ -88,7 +88,7 @@ const profileBadge = document.querySelector("#profile-badge")
 const profileRank = document.querySelector("#profile-rank")
 
 function setProfile(data) {
-    // profileName.textContent = data.displayName
+    profileName.textContent = data.displayName
     profileScore.textContent = data.score
     profileImage.src = data.photoURL
     profileBadge.textContent = data.badge.name
@@ -285,14 +285,14 @@ window.addEventListener("load", () => {
                         <span style="background-color: ${data.badge.rankColor};border-radius: 50%;" >${rank}</span>
                     </div>
 
-                    <img class="leaderboard-image" src="${data.photoURL}"  onerror="this.onerror=null; this.src='assets/image/icons/profile-default.svg';"/>
+                    <img class="leaderboard-image" src="${data.photoURL}"  onerror="this.onerror=null; this.src='assets/image/icons/profile-default.svg';"  alt="Profile Image"/>
 
                     <div class="leaderboard-name">
                         <span>${data.displayName}</span>
                         <span class="badge ${data.badge.className}">${data.badge.name}</span>
                     </div>
                     <div class="leaderboard-score">
-                        <img src="assets/image/icons/star.svg" />
+                        <img src="assets/image/icons/star.svg" alt="start" />
                         <span>${data.score}</span>
                     </div>
                 </div>
