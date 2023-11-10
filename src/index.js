@@ -212,7 +212,7 @@ window.addEventListener("load", () => {
 
     // check if viewport is mobile or not
     const maxDesktopWidth = 430
-    const maxCanvasHeight = 820
+    const maxCanvasHeight = 960
     const isMobile = window.innerWidth <= 768
 
     const canvasWidth = isMobile ? window.innerWidth : maxDesktopWidth
