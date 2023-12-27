@@ -18,7 +18,7 @@ Selamat datang di "Circle Drop and Grow," sebuah permainan web sederhana di mana
 
 ## Game preview
 
-![Game Preview](https://circle-drop.netlify.com/assets/image/preview.png)
+![Game Preview](https://circle-drop.netlify.com/assets/image/circle-drop-preview.png)
 
 ## Kontribusi
 

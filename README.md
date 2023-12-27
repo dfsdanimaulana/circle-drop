@@ -18,7 +18,7 @@ Welcome to "Circle Drop and Grow," a simple web game where you control a circle,
 
 ## Game preview
 
-![Game Preview](https://circle-drop.netlify.com/assets/image/preview.png)
+![Game Preview](https://circle-drop.netlify.com/assets/image/circle-drop-preview.png)
 
 ## Contributions
 
